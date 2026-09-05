@@ -1,0 +1,262 @@
+/* ==========================================================================
+   Al Huda Mobiles Repairing Lab — Global Design Tokens & Base Styles
+   ========================================================================== */
+
+:root {
+    --color-bg: #F3F6FA;
+    --color-bg-panel: #FFFFFF;
+    --color-bg-panel-alt: #EAF0F6;
+    --color-border: #DCE3EC;
+    --color-text: #1B2027;
+    --color-text-muted: #6B7280;
+    --color-accent: #E8722F;      /* diagnostic / solder amber */
+    --color-accent-cyan: #1AA69C; /* circuit teal, used sparingly */
+
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
+}
+
+body {
+    background: linear-gradient(180deg, #EEF3F9 0%, #F8FAFC 40%, #FDF6F0 100%);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+h1, h2, h3, h4, .font-display {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+}
+
+a {
+    color: var(--color-accent-cyan);
+    text-decoration: none;
+}
+
+/* ---------------- Navbar ---------------- */
+.site-navbar {
+    background: var(--color-bg-panel);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.site-navbar .brand {
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--color-text);
+    font-size: 1.15rem;
+}
+
+.site-navbar .nav-link {
+    color: var(--color-text-muted);
+}
+
+.site-navbar .nav-link:hover {
+    color: var(--color-text);
+}
+
+/* ---------------- Buttons ---------------- */
+.btn-accent {
+    background: var(--color-accent);
+    color: #FFFFFF;
+    font-weight: 600;
+    border: none;
+    padding: 0.65rem 1.4rem;
+    border-radius: 6px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn-accent:hover {
+    color: #FFFFFF;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(232, 114, 47, 0.25);
+}
+
+.btn-outline-soft {
+    background: transparent;
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    padding: 0.65rem 1.4rem;
+    border-radius: 6px;
+}
+
+.btn-outline-soft:hover {
+    color: var(--color-text);
+    border-color: var(--color-text-muted);
+    background: var(--color-bg-panel-alt);
+}
+
+/* ---------------- Hero ---------------- */
+.hero {
+    padding: 6rem 0 5rem;
+    background: linear-gradient(135deg, #EAF2FB 0%, #F3F6FA 50%, #FBF0E6 100%);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.hero .eyebrow {
+    color: var(--color-accent-cyan);
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+}
+
+.hero h1 {
+    font-size: 3rem;
+    font-weight: 600;
+    max-width: 620px;
+    line-height: 1.15;
+}
+
+.hero p.lead {
+    color: var(--color-text-muted);
+    max-width: 520px;
+    font-size: 1.1rem;
+}
+
+/* ---------------- Repair Ticket mock card (hero visual) ---------------- */
+.ticket-card {
+    background: var(--color-bg-panel);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 1.75rem;
+    max-width: 380px;
+    margin-left: auto;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 12px 30px rgba(27, 32, 39, 0.06);
+}
+
+.ticket-card .ticket-id {
+    font-family: var(--font-display);
+    color: var(--color-accent-cyan);
+    font-size: 0.95rem;
+}
+
+.ticket-card .ticket-status {
+    display: inline-block;
+    background: rgba(232, 114, 47, 0.1);
+    color: var(--color-accent);
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-top: 0.5rem;
+}
+
+.ticket-card .ticket-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.6rem 0;
+    border-top: 1px solid var(--color-border);
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+}
+
+.ticket-card .ticket-row span:last-child {
+    color: var(--color-text);
+}
+
+/* ---------------- Service cards ---------------- */
+.service-card {
+    background: var(--color-bg-panel);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 2rem 1.75rem;
+    height: 100%;
+}
+
+.service-card .icon {
+    color: var(--color-accent);
+    font-size: 1.6rem;
+    margin-bottom: 1rem;
+}
+
+.service-card h5 {
+    font-family: var(--font-display);
+    margin-bottom: 0.5rem;
+}
+
+.service-card p {
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 0;
+}
+
+/* ---------------- CTA section ---------------- */
+.cta-band {
+    background: linear-gradient(135deg, #EAF2FB 0%, #FBF0E6 100%);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+    padding: 3.5rem 0;
+}
+
+/* ---------------- Footer ---------------- */
+.site-footer {
+    background: var(--color-bg-panel);
+    border-top: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    padding: 2.5rem 0;
+    font-size: 0.9rem;
+}
+
+/* ---------------- Responsive ---------------- */
+
+/* Tablets and small laptops */
+@media (max-width: 991px) {
+    .hero {
+        padding: 4.5rem 0 3.5rem;
+        text-align: center;
+    }
+    .hero .lead {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .hero h1 {
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .ticket-card {
+        margin: 3rem auto 0;
+    }
+    .hero .d-flex {
+        justify-content: center;
+    }
+}
+
+/* Mobile phones */
+@media (max-width: 576px) {
+    .hero {
+        padding: 3rem 0 2.5rem;
+    }
+    .hero h1 {
+        font-size: 1.85rem;
+    }
+    .hero p.lead {
+        font-size: 1rem;
+    }
+    .hero .d-flex {
+        flex-direction: column;
+        gap: 0.75rem !important;
+    }
+    .hero .d-flex .btn {
+        width: 100%;
+    }
+    .ticket-card {
+        max-width: 100%;
+        padding: 1.25rem;
+    }
+    .service-card {
+        padding: 1.5rem 1.25rem;
+    }
+    .cta-band .d-flex {
+        text-align: center;
+    }
+    .cta-band .d-flex.gap-3 {
+        flex-direction: column;
+        width: 100%;
+    }
+    .cta-band .btn {
+        width: 100%;
+    }
+}

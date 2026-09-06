@@ -12,6 +12,7 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $adminRole = Role::where('slug', 'admin')->first();
+        $technicianRole = Role::where('slug', 'technician')->first();
         $userRole = Role::where('slug', 'user')->first();
 
         User::updateOrCreate(
@@ -19,6 +20,16 @@ class UserSeeder extends Seeder
             [
                 'name' => 'Admin',
                 'role_id' => $adminRole->id,
+                'password' => Hash::make('password'),
+                'email_verified_at' => now(),
+            ]
+        );
+
+        User::updateOrCreate(
+            ['email' => 'bilal.technician@gmail.com'],
+            [
+                'name' => 'Bilal A.',
+                'role_id' => $technicianRole->id,
                 'password' => Hash::make('password'),
                 'email_verified_at' => now(),
             ]

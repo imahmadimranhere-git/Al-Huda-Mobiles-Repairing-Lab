@@ -11,6 +11,7 @@ class Repair extends Model
     protected $fillable = [
         'tracking_id',
         'user_id',
+        'technician_id',
         'device_brand',
         'device_model',
         'issue',
@@ -24,6 +25,12 @@ class Repair extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    // The technician assigned to this repair
+    public function technician(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'technician_id');
     }
 
     // Full timeline of status changes for this repair

@@ -31,12 +31,12 @@ class LoginController extends Controller
 
         $user = Auth::user();
 
-        // Admin seedha admin dashboard par jayega, User normal home page par
+        // Admin seedha admin dashboard par jayega, Customer apne dashboard par
         if ($user->isAdmin()) {
             return redirect()->route('admin.dashboard');
         }
 
-        return redirect()->route('home');
+        return redirect()->route('customer.dashboard');
     }
 
     public function destroy(Request $request)

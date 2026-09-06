@@ -4,11 +4,10 @@
 
 @section('content')
 
-    {{-- Hero section: headline + a mock repair ticket that shows exactly what this lab does --}}
     <section class="hero">
         <div class="container">
             <div class="row align-items-center gy-5">
-                <div class="col-lg-6">
+                <div class="col-lg-6 text-center text-lg-start">
                     <p class="eyebrow font-display">Precision mobile diagnostics</p>
                     <h1>We fix what your phone can't tell you is wrong.</h1>
                     <p class="lead">
@@ -16,15 +15,13 @@
                         done by trained technicians and tracked from the moment
                         it reaches our bench to the moment it's back in your hand.
                     </p>
-                    <div class="d-flex gap-3 mt-4">
-                        <a href="#" class="btn btn-accent">Book a repair</a>
-                        <a href="#" class="btn btn-outline-soft">Track my repair</a>
+                    <div class="d-flex gap-3 mt-4 justify-content-center justify-content-lg-start">
+                        <a href="{{ route('repairs.create') }}" class="btn btn-accent">Book a repair</a>
+                        <a href="{{ route('repairs.track') }}" class="btn btn-outline-soft">Track my repair</a>
                     </div>
                 </div>
 
                 <div class="col-lg-6">
-                    {{-- This mock card is just a visual preview for Phase 1.
-                         Real tracking data will replace it in Phase 5 (Repair Management). --}}
                     <div class="ticket-card">
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
@@ -56,7 +53,6 @@
         </div>
     </section>
 
-    {{-- Services preview: real service catalog + pricing arrives in Phase 3/4 (Website CMS) --}}
     <section class="py-5">
         <div class="container py-4">
             <div class="row">
@@ -95,7 +91,6 @@
         </div>
     </section>
 
-    {{-- CTA band --}}
     <section class="cta-band">
         <div class="container d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
             <div>
@@ -103,8 +98,8 @@
                 <p class="text-secondary mb-0">Book a slot and drop it off, or track a repair already in progress.</p>
             </div>
             <div class="d-flex gap-3">
-                <a href="#" class="btn btn-accent">Book a repair</a>
-                <a href="#" class="btn btn-outline-soft">Track my repair</a>
+                <a href="{{ route('repairs.create') }}" class="btn btn-accent">Book a repair</a>
+                <a href="{{ route('repairs.track') }}" class="btn btn-outline-soft">Track my repair</a>
             </div>
         </div>
     </section>

@@ -5,14 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Al Huda Mobiles Repairing Lab')</title>
 
-    <!-- Fonts: Space Grotesk for headings, Inter for body text -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-
-    <!-- Site-wide design tokens and custom styles -->
     <link href="{{ asset('assets/css/app.css') }}" rel="stylesheet">
 </head>
 <body>
@@ -27,8 +24,23 @@
             </button>
             <div class="collapse navbar-collapse" id="mainNav">
                 <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
-                    {{-- Services, Shop, Track Repair links will be added in later phases --}}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('repairs.track') }}">Track Repair</a>
+                    </li>
+                    
+
+
                     @auth
+    @unless (auth()->user()->isAdmin())
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('customer.dashboard') }}">My Dashboard</a>
+        </li>
+    @endunless
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('repairs.create') }}">Book Repair</a>
+    </li>
+
+
                         <li class="nav-item">
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
@@ -45,7 +57,6 @@
     </nav>
 
     <main>
-        {{-- Page-specific content goes here --}}
         @yield('content')
     </main>
 

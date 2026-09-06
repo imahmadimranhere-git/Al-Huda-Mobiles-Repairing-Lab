@@ -17,7 +17,6 @@
 
 <div class="d-flex admin-shell">
 
-    {{-- Sidebar: off-canvas on mobile, fixed on desktop --}}
     <aside class="admin-sidebar" id="adminSidebar">
         <h5 class="mb-4 font-display"><i class="bi bi-cpu"></i> Al Huda Mobiles Repairing Lab</h5>
 
@@ -28,14 +27,24 @@
                     <i class="bi bi-speedometer2"></i> Dashboard
                 </a>
             </li>
-            {{-- Products, Orders, Repairs, Appointments links will be added in later phases --}}
+            <li class="nav-item">
+                <a class="admin-nav-link {{ request()->routeIs('admin.repairs.*') ? 'active' : '' }}"
+                   href="{{ route('admin.repairs.index') }}">
+                    <i class="bi bi-tools"></i> Repairs
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="admin-nav-link {{ request()->routeIs('admin.technicians.*') ? 'active' : '' }}"
+                   href="{{ route('admin.technicians.index') }}">
+                    <i class="bi bi-person-gear"></i> Technicians
+                </a>
+            </li>
+            {{-- Products, Orders, Appointments links will be added in later phases --}}
         </ul>
     </aside>
 
-    {{-- Backdrop shown behind the sidebar when open on mobile --}}
     <div class="admin-backdrop" id="adminBackdrop"></div>
 
-    {{-- Main content area --}}
     <div class="flex-grow-1 admin-main">
         <nav class="admin-topbar">
             <div class="d-flex align-items-center gap-3">
@@ -59,8 +68,6 @@
     </div>
 </div>
 
-{{-- Small script to toggle the sidebar on mobile — kept inline since it's
-     only a few lines and specific to this layout. --}}
 <script>
     const sidebar = document.getElementById('adminSidebar');
     const backdrop = document.getElementById('adminBackdrop');

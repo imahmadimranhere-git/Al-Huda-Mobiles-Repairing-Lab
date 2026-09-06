@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -36,9 +37,25 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class);
     }
 
-    // Helper: $user->isAdmin() → true/false
+    // All repairs booked by this customer
+    public function repairs(): HasMany
+    {
+        return $this->hasMany(Repair::class);
+    }
+
+    // All repairs assigned to this user as a technician
+    public function assignedRepairs(): HasMany
+    {
+        return $this->hasMany(Repair::class, 'technician_id');
+    }
+
     public function isAdmin(): bool
     {
         return $this->role?->slug === 'admin';
+    }
+
+    public function isTechnician(): bool
+    {
+        return $this->role?->slug === 'technician';
     }
 }

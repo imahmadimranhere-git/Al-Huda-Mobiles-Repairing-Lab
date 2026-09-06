@@ -33,7 +33,6 @@ class RepairController extends Controller
             'status' => 'requested',
         ]);
 
-        // Log the very first status entry, so the timeline always has a starting point
         RepairStatusHistory::create([
             'repair_id' => $repair->id,
             'old_status' => null,
@@ -51,5 +50,29 @@ class RepairController extends Controller
         $repair = Repair::where('tracking_id', $trackingId)->firstOrFail();
 
         return view('repairs.confirmation', ['repair' => $repair]);
+    }
+
+    // Show the "Track Repair" search form
+    public function trackForm()
+    {
+        return view('repairs.track');
+    }
+
+    // Handle tracking ID search and show status
+    public function trackResult(Request $request)
+    {
+        $request->validate([
+            'tracking_id' => ['required', 'string'],
+        ]);
+
+        $repair = Repair::where('tracking_id', $request->tracking_id)->first();
+
+        if (! $repair) {
+            return back()->withErrors(['tracking_id' => 'No repair found with this tracking ID.']);
+        }
+
+        $repair->load('statusHistories');
+
+        return view('repairs.track-result', ['repair' => $repair]);
     }
 }

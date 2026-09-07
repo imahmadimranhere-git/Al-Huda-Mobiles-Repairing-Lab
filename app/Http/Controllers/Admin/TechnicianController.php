@@ -7,6 +7,7 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class TechnicianController extends Controller
 {
@@ -30,7 +31,7 @@ class TechnicianController extends Controller
         return view('admin.technicians.create');
     }
 
-    // Handle new technician creation
+    // Handle new technician creation (password auto-generated, not asked from admin)
     public function store(Request $request)
     {
         abort_unless(auth()->user()->isAdmin(), 403, 'Access denied.');
@@ -39,7 +40,6 @@ class TechnicianController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'unique:users,email'],
             'phone' => ['nullable', 'string', 'max:20'],
-            'password' => ['required', 'confirmed', 'min:8'],
         ]);
 
         $technicianRole = Role::where('slug', 'technician')->first();
@@ -48,7 +48,7 @@ class TechnicianController extends Controller
             'name' => $validated['name'],
             'email' => $validated['email'],
             'phone' => $validated['phone'] ?? null,
-            'password' => Hash::make($validated['password']),
+            'password' => Hash::make(Str::random(16)), // technician doesn't need to log in for now
             'role_id' => $technicianRole->id,
             'email_verified_at' => now(),
         ]);
@@ -75,27 +75,26 @@ class TechnicianController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'unique:users,email,' . $technician->id],
             'phone' => ['nullable', 'string', 'max:20'],
-            'password' => ['nullable', 'confirmed', 'min:8'],
         ]);
 
         $technician->update([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'phone' => $validated['phone'] ?? null,
-            'password' => $validated['password'] ? Hash::make($validated['password']) : $technician->password,
         ]);
 
         return redirect()->route('admin.technicians.index')->with('status', 'Technician updated successfully.');
     }
 
-    // Toggle active/inactive (instead of deleting, so past repairs stay linked)
-    public function toggleStatus(User $technician)
+    // Delete a technician. Their past repairs stay intact — technician_id
+    // on those rows becomes null (see the "nullOnDelete" set on the migration).
+    public function destroy(User $technician)
     {
         abort_unless(auth()->user()->isAdmin(), 403, 'Access denied.');
         abort_unless($technician->isTechnician(), 404);
 
-        $technician->update(['is_active' => ! $technician->is_active]);
+        $technician->delete();
 
-        return back()->with('status', 'Technician status updated.');
+        return back()->with('status', 'Technician deleted.');
     }
 }

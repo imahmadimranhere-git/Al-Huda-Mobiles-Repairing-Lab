@@ -7,12 +7,13 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\RepairController;
+use App\Http\Controllers\Admin\CustomerController as AdminCustomerController;
+use App\Http\Controllers\Admin\WebsiteContentController;
+use App\Http\Controllers\Admin\ServiceController;
 use Illuminate\Support\Facades\Route;
 
 // Home page
-Route::get('/', function () {
-    return view('home');
-})->name('home');
+Route::get('/', [\App\Http\Controllers\Public\HomeController::class, 'index'])->name('home');
 
 // Track Repair — open to everyone, no login required
 Route::get('track-repair', [RepairController::class, 'trackForm'])->name('repairs.track');
@@ -57,5 +58,24 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::post('technicians', [TechnicianController::class, 'store'])->name('technicians.store');
     Route::get('technicians/{technician}/edit', [TechnicianController::class, 'edit'])->name('technicians.edit');
     Route::put('technicians/{technician}', [TechnicianController::class, 'update'])->name('technicians.update');
-    Route::put('technicians/{technician}/toggle-status', [TechnicianController::class, 'toggleStatus'])->name('technicians.toggle-status');
-});
+    Route::delete('technicians/{technician}', [TechnicianController::class, 'destroy'])->name('technicians.destroy');
+
+        // Customer Management
+    Route::get('customers', [AdminCustomerController::class, 'index'])->name('customers.index');
+    Route::get('customers/{customer}', [AdminCustomerController::class, 'show'])->name('customers.show');
+
+
+        // Website Content
+    Route::get('website/home', [WebsiteContentController::class, 'edit'])->name('website.home');
+    Route::put('website/home', [WebsiteContentController::class, 'update'])->name('website.home.update');
+
+
+        // Services
+    Route::get('services', [ServiceController::class, 'index'])->name('services.index');
+    Route::get('services/create', [ServiceController::class, 'create'])->name('services.create');
+    Route::post('services', [ServiceController::class, 'store'])->name('services.store');
+    Route::get('services/{service}/edit', [ServiceController::class, 'edit'])->name('services.edit');
+    Route::put('services/{service}', [ServiceController::class, 'update'])->name('services.update');
+    Route::delete('services/{service}', [ServiceController::class, 'destroy'])->name('services.destroy');
+
+    });

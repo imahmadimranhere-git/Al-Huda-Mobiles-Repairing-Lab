@@ -8,15 +8,13 @@
         <div class="container">
             <div class="row align-items-center gy-5">
                 <div class="col-lg-6 text-center text-lg-start">
-                    <p class="eyebrow font-display">Precision mobile diagnostics</p>
-                    <h1>We fix what your phone can't tell you is wrong.</h1>
+                    <p class="eyebrow font-display">{{ $settings['hero_eyebrow'] }}</p>
+                    <h1>{{ $settings['hero_heading'] }}</h1>
                     <p class="lead">
-                        Micro-soldering, motherboard repair and full diagnostics,
-                        done by trained technicians and tracked from the moment
-                        it reaches our bench to the moment it's back in your hand.
+                        {{ $settings['hero_description'] }}
                     </p>
                     <div class="d-flex gap-3 mt-4 justify-content-center justify-content-lg-start">
-                        <a href="{{ route('repairs.create') }}" class="btn btn-accent">Book a repair</a>
+                        <a href="{{ $settings['hero_button_url'] }}" class="btn btn-accent">{{ $settings['hero_button_text'] }}</a>
                         <a href="{{ route('repairs.track') }}" class="btn btn-outline-soft">Track my repair</a>
                     </div>
                 </div>
@@ -57,51 +55,31 @@
         <div class="container py-4">
             <div class="row">
                 <div class="col-lg-6">
-                    <h2 class="mb-3">Built like a lab, not a counter.</h2>
-                    <p class="text-secondary mb-5">
-                        Every device that comes in gets diagnosed, tracked and
-                        documented — not guessed at.
-                    </p>
+                   <h2 class="mb-3">Our Services</h2> 
+<p class="text-secondary mb-5">
+    Professional mobile repair services with expert diagnosis, quality parts, and reliable workmanship.
+</p>
                 </div>
             </div>
 
             <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="service-card">
-                        <div class="icon"><i class="bi bi-cpu"></i></div>
-                        <h5>Motherboard Repair</h5>
-                        <p>Component-level diagnostics and micro-soldering for faults that a screen or battery swap won't fix.</p>
+                @forelse ($services as $service)
+                    <div class="col-md-4">
+                        <div class="service-card">
+                            <div class="icon"><i class="bi {{ $service->icon }}"></i></div>
+                            <h5>{{ $service->title }}</h5>
+                            <p>{{ $service->description }}</p>
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="service-card">
-                        <div class="icon"><i class="bi bi-phone"></i></div>
-                        <h5>Screen &amp; Battery</h5>
-                        <p>Genuine and high-grade replacement parts, fitted and tested before your device leaves the bench.</p>
+                @empty
+                    <div class="col-12">
+                        <p class="text-secondary">No services added yet.</p>
                     </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="service-card">
-                        <div class="icon"><i class="bi bi-qr-code-scan"></i></div>
-                        <h5>Live Tracking</h5>
-                        <p>Every repair gets a tracking ID and QR code, so you always know exactly where your device is.</p>
-                    </div>
-                </div>
+                @endforelse
             </div>
         </div>
     </section>
 
-    <section class="cta-band">
-        <div class="container d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
-            <div>
-                <h4 class="mb-1">Have a device that needs looking at?</h4>
-                <p class="text-secondary mb-0">Book a slot and drop it off, or track a repair already in progress.</p>
-            </div>
-            <div class="d-flex gap-3">
-                <a href="{{ route('repairs.create') }}" class="btn btn-accent">Book a repair</a>
-                <a href="{{ route('repairs.track') }}" class="btn btn-outline-soft">Track my repair</a>
-            </div>
-        </div>
-    </section>
+    
 
 @endsection

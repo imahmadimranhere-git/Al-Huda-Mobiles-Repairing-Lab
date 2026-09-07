@@ -33,19 +33,9 @@
                         <input type="email" name="email" class="form-control" value="{{ old('email', $technician->email) }}" required>
                     </div>
 
-                    <div class="mb-3">
+                    <div class="mb-4">
                         <label class="form-label">Phone</label>
                         <input type="text" name="phone" class="form-control" value="{{ old('phone', $technician->phone) }}">
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">New Password (leave blank to keep current)</label>
-                        <input type="password" name="password" class="form-control">
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="form-label">Confirm New Password</label>
-                        <input type="password" name="password_confirmation" class="form-control">
                     </div>
 
                     <button type="submit" class="btn btn-accent w-100">Save Changes</button>

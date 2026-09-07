@@ -28,6 +28,12 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a class="admin-nav-link {{ request()->routeIs('admin.customers.*') ? 'active' : '' }}"
+                   href="{{ route('admin.customers.index') }}">
+                    <i class="bi bi-people"></i> Customers
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="admin-nav-link {{ request()->routeIs('admin.repairs.*') ? 'active' : '' }}"
                    href="{{ route('admin.repairs.index') }}">
                     <i class="bi bi-tools"></i> Repairs
@@ -37,6 +43,18 @@
                 <a class="admin-nav-link {{ request()->routeIs('admin.technicians.*') ? 'active' : '' }}"
                    href="{{ route('admin.technicians.index') }}">
                     <i class="bi bi-person-gear"></i> Technicians
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="admin-nav-link {{ request()->routeIs('admin.services.*') ? 'active' : '' }}"
+                   href="{{ route('admin.services.index') }}">
+                    <i class="bi bi-grid-3x3-gap"></i> Services
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="admin-nav-link {{ request()->routeIs('admin.website.*') ? 'active' : '' }}"
+                   href="{{ route('admin.website.home') }}">
+                    <i class="bi bi-layout-text-window"></i> Website Content
                 </a>
             </li>
             {{-- Products, Orders, Appointments links will be added in later phases --}}

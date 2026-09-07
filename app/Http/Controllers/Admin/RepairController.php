@@ -126,6 +126,9 @@ class RepairController extends Controller
             'issue' => ['required', 'string', 'max:1000'],
         ]);
 
+        // Reuse an existing customer record if this phone number was seen before,
+        // otherwise create a lightweight account. Email is left blank —
+        // walk-in customers don't need to log in.
         $customer = User::where('phone', $validated['phone'])->first();
 
         if (! $customer) {
@@ -133,7 +136,7 @@ class RepairController extends Controller
 
             $customer = User::create([
                 'name' => $validated['customer_name'],
-                'email' => 'walkin_' . Str::random(10) . '@alhudarepair.local',
+                'email' => null,
                 'phone' => $validated['phone'],
                 'password' => Hash::make(Str::random(16)),
                 'role_id' => $customerRole?->id,

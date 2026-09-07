@@ -27,20 +27,10 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('repairs.track') }}">Track Repair</a>
                     </li>
-                    
-
-
                     @auth
-    @unless (auth()->user()->isAdmin())
-        <li class="nav-item">
-            <a class="nav-link" href="{{ route('customer.dashboard') }}">My Dashboard</a>
-        </li>
-    @endunless
-    <li class="nav-item">
-        <a class="nav-link" href="{{ route('repairs.create') }}">Book Repair</a>
-    </li>
-
-
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('repairs.create') }}">Book Repair</a>
+                        </li>
                         <li class="nav-item">
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
@@ -60,9 +50,33 @@
         @yield('content')
     </main>
 
+    @php
+        $footerPhone = \App\Models\SiteSetting::get('contact_phone');
+        $footerWhatsapp = \App\Models\SiteSetting::get('contact_whatsapp');
+        $footerEmail = \App\Models\SiteSetting::get('contact_email');
+        $footerAddress = \App\Models\SiteSetting::get('contact_address');
+    @endphp
+
     <footer class="site-footer">
-        <div class="container text-center">
-            <p class="mb-0">&copy; {{ date('Y') }} Al Huda Mobiles Repairing Lab. All rights reserved.</p>
+        <div class="container">
+            @if ($footerPhone || $footerWhatsapp || $footerEmail || $footerAddress)
+                <div class="row g-3 mb-3 text-center text-md-start">
+                    @if ($footerPhone)
+                        <div class="col-md-3"><i class="bi bi-telephone me-1"></i> {{ $footerPhone }}</div>
+                    @endif
+                    @if ($footerWhatsapp)
+                        <div class="col-md-3"><i class="bi bi-whatsapp me-1"></i> {{ $footerWhatsapp }}</div>
+                    @endif
+                    @if ($footerEmail)
+                        <div class="col-md-3"><i class="bi bi-envelope me-1"></i> {{ $footerEmail }}</div>
+                    @endif
+                    @if ($footerAddress)
+                        <div class="col-md-3"><i class="bi bi-geo-alt me-1"></i> {{ $footerAddress }}</div>
+                    @endif
+                </div>
+                <hr style="border-color: var(--color-border);">
+            @endif
+            <p class="mb-0 text-center">&copy; {{ date('Y') }} Al Huda Mobiles Repairing Lab. All rights reserved.</p>
         </div>
     </footer>
 

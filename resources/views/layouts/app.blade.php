@@ -46,6 +46,12 @@
         </div>
     </nav>
 
+    @if (session('status'))
+        <div class="container mt-3">
+            <div class="alert alert-success">{{ session('status') }}</div>
+        </div>
+    @endif
+
     <main>
         @yield('content')
     </main>
@@ -81,5 +87,17 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Auto-dismiss any success/error alert after 3 seconds, with a short fade-out.
+        document.querySelectorAll('.alert').forEach(function (alertBox) {
+            setTimeout(function () {
+                alertBox.style.transition = 'opacity 0.4s ease';
+                alertBox.style.opacity = '0';
+                setTimeout(function () {
+                    alertBox.remove();
+                }, 400);
+            }, 3000);
+        });
+    </script>
 </body>
 </html>

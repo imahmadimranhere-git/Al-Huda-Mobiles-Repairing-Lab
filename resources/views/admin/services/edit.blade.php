@@ -19,7 +19,12 @@
     <div class="row justify-content-center">
         <div class="col-lg-7">
             <div class="service-card">
-                <form method="POST" action="{{ route('admin.services.update', $service) }}">
+                @if ($service->image)
+                    <img src="{{ asset('storage/' . $service->image) }}" alt="{{ $service->title }}"
+                         class="img-fluid rounded mb-3" style="max-height: 180px; object-fit: cover;">
+                @endif
+
+                <form method="POST" action="{{ route('admin.services.update', $service) }}" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
 
@@ -34,12 +39,8 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Icon (Bootstrap Icons class name)</label>
-                        <input type="text" name="icon" class="form-control" value="{{ old('icon', $service->icon) }}">
-                        <div class="form-text">
-                            Browse icon names at
-                            <a href="https://icons.getbootstrap.com" target="_blank">icons.getbootstrap.com</a>
-                        </div>
+                        <label class="form-label">Card Image {{ $service->image ? '(leave blank to keep current)' : '' }}</label>
+                        <input type="file" name="image" class="form-control" accept="image/*">
                     </div>
 
                     <div class="mb-3">

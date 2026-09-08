@@ -55,20 +55,29 @@
         <div class="container py-4">
             <div class="row">
                 <div class="col-lg-6">
-                   <h2 class="mb-3">Our Services</h2> 
-<p class="text-secondary mb-5">
-    Professional mobile repair services with expert diagnosis, quality parts, and reliable workmanship.
-</p>
+                    <h2 class="mb-3">Our Services</h2>
+                    <p class="text-secondary mb-5">
+                        Professional mobile repair services with expert diagnosis, quality parts,
+                        and reliable workmanship.
+                    </p>
                 </div>
             </div>
 
             <div class="row g-4">
                 @forelse ($services as $service)
                     <div class="col-md-4">
-                        <div class="service-card">
-                            <div class="icon"><i class="bi {{ $service->icon }}"></i></div>
-                            <h5>{{ $service->title }}</h5>
-                            <p>{{ $service->description }}</p>
+                        <div class="service-card service-card-image p-0">
+                            @if ($service->image)
+                                <img src="{{ asset('storage/' . $service->image) }}" alt="{{ $service->title }}" class="service-card-img">
+                            @else
+                                <div class="service-card-img service-card-img-placeholder">
+                                    <i class="bi bi-image"></i>
+                                </div>
+                            @endif
+                            <div class="service-card-body">
+                                <h5>{{ $service->title }}</h5>
+                                <p>{{ $service->description }}</p>
+                            </div>
                         </div>
                     </div>
                 @empty
@@ -80,6 +89,28 @@
         </div>
     </section>
 
-    
+    @if ($newsItems->isNotEmpty())
+        <section class="py-5" style="background: var(--color-bg-panel-alt);">
+            <div class="container py-4">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <h2 class="mb-5">News &amp; Updates</h2>
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    @foreach ($newsItems as $news)
+                        <div class="col-md-4">
+                            <div class="service-card">
+                                <p class="text-secondary small mb-2">{{ $news->published_date?->format('d M Y') }}</p>
+                                <h5>{{ $news->title }}</h5>
+                                <p>{{ $news->content }}</p>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+    @endif
 
 @endsection

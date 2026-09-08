@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Service;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ServiceController extends Controller
 {
@@ -31,14 +32,19 @@ class ServiceController extends Controller
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:500'],
-            'icon' => ['nullable', 'string', 'max:50'],
+            'image' => ['nullable', 'image', 'max:2048'],
             'display_order' => ['nullable', 'integer', 'min:0'],
         ]);
+
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('services', 'public');
+        }
 
         Service::create([
             'title' => $validated['title'],
             'description' => $validated['description'] ?? null,
-            'icon' => $validated['icon'] ?: 'bi-cpu',
+            'image' => $imagePath,
             'display_order' => $validated['display_order'] ?? 0,
             'is_active' => true,
         ]);
@@ -60,15 +66,24 @@ class ServiceController extends Controller
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:500'],
-            'icon' => ['nullable', 'string', 'max:50'],
+            'image' => ['nullable', 'image', 'max:2048'],
             'display_order' => ['nullable', 'integer', 'min:0'],
             'is_active' => ['nullable', 'boolean'],
         ]);
 
+        $imagePath = $service->image;
+        if ($request->hasFile('image')) {
+            // Remove the old image so storage doesn't fill up with unused files
+            if ($service->image) {
+                Storage::disk('public')->delete($service->image);
+            }
+            $imagePath = $request->file('image')->store('services', 'public');
+        }
+
         $service->update([
             'title' => $validated['title'],
             'description' => $validated['description'] ?? null,
-            'icon' => $validated['icon'] ?: 'bi-cpu',
+            'image' => $imagePath,
             'display_order' => $validated['display_order'] ?? 0,
             'is_active' => $request->boolean('is_active'),
         ]);
@@ -79,6 +94,10 @@ class ServiceController extends Controller
     public function destroy(Service $service)
     {
         abort_unless(auth()->user()->isAdmin(), 403, 'Access denied.');
+
+        if ($service->image) {
+            Storage::disk('public')->delete($service->image);
+        }
 
         $service->delete();
 

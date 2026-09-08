@@ -3,17 +3,59 @@
    (Uses the same color tokens defined in app.css)
    ========================================================================== */
 
+html, body {
+    height: 100%;
+}
+
 .admin-shell {
     min-height: 100vh;
     background: linear-gradient(180deg, #EEF3F9 0%, #F8FAFC 40%, #FDF6F0 100%);
 }
 
+/* Sidebar is fixed to the viewport on ALL screen sizes, so it never
+   scrolls away and never gets pushed around by page content. */
 .admin-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 250px;
-    flex-shrink: 0;
+    height: 100vh;
     background: var(--color-bg-panel);
     border-right: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    z-index: 1030;
+    transition: transform 0.25s ease;
+}
+
+.admin-sidebar-brand {
     padding: 1.5rem;
+    border-bottom: 1px solid var(--color-border);
+    flex-shrink: 0;
+}
+
+.admin-sidebar-nav {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    padding: 1rem;
+}
+
+/* User name + Logout, pinned to the bottom of the sidebar no matter
+   how tall the screen is or how much nav content is above it. */
+.admin-sidebar-footer {
+    flex-shrink: 0;
+    padding: 1rem 1.25rem;
+    border-top: 1px solid var(--color-border);
+    background: var(--color-bg-panel);
+}
+
+.admin-sidebar-footer .user-name {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin-bottom: 0.6rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .admin-nav-link {
@@ -37,6 +79,17 @@
     color: #FFFFFF;
 }
 
+/* Main content area is pushed right by the sidebar's width on desktop,
+   using margin instead of flexbox — this is what stops content from
+   ever sliding underneath the fixed sidebar. */
+.admin-main {
+    margin-left: 250px;
+    min-height: 100vh;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
 .admin-topbar {
     background: var(--color-bg-panel);
     border-bottom: 1px solid var(--color-border);
@@ -44,10 +97,14 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1010;
 }
 
-.admin-main {
-    min-width: 0; /* prevents content from overflowing the flex container */
+.admin-content {
+    padding: 1.5rem;
+    flex: 1 1 auto;
 }
 
 /* ---------------- Dashboard stat cards ---------------- */
@@ -75,21 +132,14 @@
     font-size: 1.4rem;
 }
 
-/* ---------------- Responsive sidebar (off-canvas on tablet/mobile) ---------------- */
+/* ---------------- Responsive: sidebar becomes off-canvas below 992px ---------------- */
 .admin-backdrop {
     display: none;
 }
 
 @media (max-width: 991px) {
     .admin-sidebar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        height: 100vh;
-        z-index: 1050;
         transform: translateX(-100%);
-        transition: transform 0.25s ease;
-        overflow-y: auto;
     }
 
     .admin-sidebar.is-open {
@@ -101,7 +151,7 @@
         position: fixed;
         inset: 0;
         background: rgba(0, 0, 0, 0.35);
-        z-index: 1040;
+        z-index: 1020;
         opacity: 0;
         pointer-events: none;
         transition: opacity 0.25s ease;
@@ -111,16 +161,60 @@
         opacity: 1;
         pointer-events: auto;
     }
+
+    /* No sidebar visible by default on mobile/tablet, so content takes full width */
+    .admin-main {
+        margin-left: 0;
+    }
 }
 
 @media (max-width: 576px) {
     .admin-topbar {
         padding: 0.85rem 1rem;
     }
-    .p-4 {
-        padding: 1rem !important;
+    .admin-content {
+        padding: 1rem;
     }
     .stat-card {
         padding: 1.15rem;
+    }
+    .service-card {
+        padding: 1.25rem;
+    }
+    .table {
+        font-size: 0.85rem;
+    }
+}
+
+/* Tables inside cards scroll horizontally on narrow screens instead of breaking layout */
+.table-responsive {
+    -webkit-overflow-scrolling: touch;
+}
+
+/* ---------------- Table action buttons ---------------- */
+.table-actions {
+    display: flex;
+    gap: 0.4rem;
+    justify-content: flex-end;
+    flex-wrap: nowrap;
+}
+
+.table-actions form {
+    margin: 0;
+}
+
+.table-actions .btn {
+    padding: 0.3rem 0.65rem;
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
+
+/* On narrow screens, stack the buttons vertically instead of squeezing
+   them side by side, and let each one take the row's full width. */
+@media (max-width: 576px) {
+    .table-actions {
+        flex-direction: column;
+        align-items: stretch;
+        min-width: 90px;
     }
 }

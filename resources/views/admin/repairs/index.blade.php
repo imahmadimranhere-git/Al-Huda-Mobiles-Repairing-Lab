@@ -39,6 +39,7 @@
     </div>
 
     <div class="service-card p-0">
+        <div class="table-responsive">
         <table class="table mb-0 align-middle">
             <thead>
                 <tr>
@@ -62,11 +63,11 @@
                             <span class="ticket-status">{{ ucfirst(str_replace('-', ' ', $repair->status)) }}</span>
                         </td>
                         <td>{{ $repair->created_at->format('d M Y') }}</td>
-                        <td class="pe-4 text-end">
-                            <a href="{{ route('admin.repairs.show', $repair) }}" class="btn btn-outline-soft btn-sm">
-                                View
-                            </a>
-                        </td>
+                                                    <td class="pe-4">
+                                <div class="table-actions">
+                                    <a href="{{ route('admin.repairs.show', $repair) }}" class="btn btn-outline-soft btn-sm">View</a>
+                                </div>
+                            </td>
                     </tr>
                 @empty
                     <tr>
@@ -75,6 +76,7 @@
                 @endforelse
             </tbody>
         </table>
+        </div>
     </div>
 
     <div class="mt-3">

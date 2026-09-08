@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
+use App\Models\NewsUpdate;
 use App\Models\Service;
 use App\Models\SiteSetting;
 use Illuminate\View\View;
@@ -21,6 +22,12 @@ class HomeController extends Controller
 
         $services = Service::where('is_active', true)->orderBy('display_order')->get();
 
-        return view('home', ['settings' => $settings, 'services' => $services]);
+        $newsItems = NewsUpdate::where('is_active', true)
+            ->orderBy('display_order')
+            ->orderByDesc('published_date')
+            ->take(3)
+            ->get();
+
+        return view('home', ['settings' => $settings, 'services' => $services, 'newsItems' => $newsItems]);
     }
 }

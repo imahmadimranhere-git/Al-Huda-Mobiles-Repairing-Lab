@@ -15,6 +15,7 @@
     @endif
 
     <div class="service-card p-0">
+        <div class="table-responsive">
         <table class="table mb-0 align-middle">
             <thead>
                 <tr>
@@ -30,14 +31,16 @@
                         <td class="ps-4">{{ $technician->name }}</td>
                         <td>{{ $technician->email }}</td>
                         <td>{{ $technician->phone ?? '—' }}</td>
-                        <td class="pe-4 text-end">
-                            <a href="{{ route('admin.technicians.edit', $technician) }}" class="btn btn-outline-soft btn-sm">Edit</a>
-                            <form method="POST" action="{{ route('admin.technicians.destroy', $technician) }}" class="d-inline"
-                                  onsubmit="return confirm('Delete this technician? This cannot be undone.');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-outline-soft btn-sm text-danger">Delete</button>
-                            </form>
+                                                <td class="pe-4">
+                            <div class="table-actions">
+                                <a href="{{ route('admin.technicians.edit', $technician) }}" class="btn btn-outline-soft btn-sm">Edit</a>
+                                <form method="POST" action="{{ route('admin.technicians.destroy', $technician) }}"
+                                      onsubmit="return confirm('Delete this technician? This cannot be undone.');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-outline-soft btn-sm text-danger w-100">Delete</button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                 @empty
@@ -48,4 +51,5 @@
             </tbody>
         </table>
     </div>
+    </div>>
 @endsection

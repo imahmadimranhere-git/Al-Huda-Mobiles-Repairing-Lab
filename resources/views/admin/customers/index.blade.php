@@ -19,6 +19,7 @@
     </div>
 
     <div class="service-card p-0">
+        <div class="table-responsive">
         <table class="table mb-0 align-middle">
             <thead>
                 <tr>
@@ -38,8 +39,10 @@
                         <td>{{ $customer->phone ?? '—' }}</td>
                         <td>{{ $customer->repairs_count }}</td>
                         <td>{{ $customer->created_at->format('d M Y') }}</td>
-                        <td class="pe-4 text-end">
+                        <td class="pe-4">
+                             <div class="table-actions">
                             <a href="{{ route('admin.customers.show', $customer) }}" class="btn btn-outline-soft btn-sm">View</a>
+                             </div>
                         </td>
                     </tr>
                 @empty
@@ -49,6 +52,7 @@
                 @endforelse
             </tbody>
         </table>
+        </div>>
     </div>
 
     <div class="mt-3">

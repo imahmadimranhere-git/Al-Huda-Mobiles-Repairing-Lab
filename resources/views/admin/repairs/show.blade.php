@@ -12,7 +12,7 @@
         <div class="alert alert-success">{{ session('status') }}</div>
     @endif
 
-    <div class="row g-4">
+    <div class="row g-4 align-items-start">
         <div class="col-lg-7">
             <div class="service-card mb-4">
                 <h5 class="mb-3">Repair Details</h5>

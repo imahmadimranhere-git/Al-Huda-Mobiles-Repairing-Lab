@@ -16,12 +16,21 @@
     --font-body: 'Inter', sans-serif;
 }
 
+* {
+    box-sizing: border-box;
+}
+
+html {
+    overflow-x: hidden;
+}
+
 body {
     background: linear-gradient(180deg, #EEF3F9 0%, #F8FAFC 40%, #FDF6F0 100%);
     color: var(--color-text);
     font-family: var(--font-body);
     line-height: 1.6;
     min-height: 100vh;
+    overflow-x: hidden;
 }
 
 h1, h2, h3, h4, .font-display {
@@ -32,6 +41,11 @@ h1, h2, h3, h4, .font-display {
 a {
     color: var(--color-accent-cyan);
     text-decoration: none;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
 }
 
 /* ---------------- Navbar ---------------- */
@@ -143,9 +157,6 @@ a {
     margin-top: 0.5rem;
 }
 
-/* NOTE: this used to be scoped as ".ticket-card .ticket-row", which meant
-   it only worked inside a ticket-card. It's now a standalone class so it
-   works consistently inside any card (service-card, ticket-card, etc). */
 .ticket-row {
     display: flex;
     justify-content: space-between;
@@ -196,6 +207,44 @@ a {
     margin-bottom: 0;
 }
 
+/* ---------------- Service cards with a full-width image (used on home page) ---------------- */
+.service-card-image {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.service-card-img {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    display: block;
+}
+
+.service-card-img-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-bg-panel-alt);
+    color: var(--color-text-muted);
+    font-size: 2rem;
+}
+
+.service-card-body {
+    padding: 1.5rem 1.75rem;
+}
+
+.service-card-body h5 {
+    font-family: var(--font-display);
+    margin-bottom: 0.5rem;
+}
+
+.service-card-body p {
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 0;
+}
+
 /* ---------------- CTA section ---------------- */
 .cta-band {
     background: linear-gradient(135deg, #EAF2FB 0%, #FBF0E6 100%);
@@ -213,7 +262,25 @@ a {
     font-size: 0.9rem;
 }
 
-/* ---------------- Responsive ---------------- */
+/* ==========================================================================
+   Responsive — covers desktop, laptop, tablet, and phone screens
+   ========================================================================== */
+
+/* Large desktops (>1400px): cap hero heading size so it doesn't look oversized */
+@media (min-width: 1400px) {
+    .hero h1 {
+        font-size: 3.25rem;
+    }
+}
+
+/* Laptops / small desktops */
+@media (max-width: 1199px) {
+    .hero h1 {
+        font-size: 2.6rem;
+    }
+}
+
+/* Tablets */
 @media (max-width: 991px) {
     .hero {
         padding: 4.5rem 0 3.5rem;
@@ -227,24 +294,54 @@ a {
         max-width: 100%;
         margin-left: auto;
         margin-right: auto;
-    }
-    .ticket-card {
-        margin: 3rem auto 0;
+        font-size: 2.3rem;
     }
     .hero .d-flex {
         justify-content: center;
     }
+    .ticket-card {
+        margin: 3rem auto 0;
+        max-width: 420px;
+    }
+    .service-card-img {
+        aspect-ratio: 16 / 9;
+    }
 }
 
+/* Large phones / small tablets */
+@media (max-width: 767px) {
+    .site-navbar .navbar-brand {
+        font-size: 1rem;
+    }
+    .hero {
+        padding: 3.5rem 0 3rem;
+    }
+    .hero h1 {
+        font-size: 2rem;
+    }
+    .hero p.lead {
+        font-size: 1rem;
+    }
+    section.py-5 {
+        padding-top: 3rem !important;
+        padding-bottom: 3rem !important;
+    }
+}
+
+/* Phones */
 @media (max-width: 576px) {
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
     .hero {
         padding: 3rem 0 2.5rem;
     }
     .hero h1 {
-        font-size: 1.85rem;
+        font-size: 1.75rem;
     }
     .hero p.lead {
-        font-size: 1rem;
+        font-size: 0.95rem;
     }
     .hero .d-flex {
         flex-direction: column;
@@ -259,6 +356,9 @@ a {
     }
     .service-card {
         padding: 1.5rem 1.25rem;
+    }
+    .service-card-body {
+        padding: 1.25rem;
     }
     .ticket-row {
         flex-direction: column;
@@ -277,5 +377,18 @@ a {
     }
     .cta-band .btn {
         width: 100%;
+    }
+    .site-footer .row > div {
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* Very small phones */
+@media (max-width: 375px) {
+    .hero h1 {
+        font-size: 1.5rem;
+    }
+    .navbar-brand {
+        font-size: 0.9rem;
     }
 }

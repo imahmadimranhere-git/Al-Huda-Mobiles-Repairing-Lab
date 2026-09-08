@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\RepairController;
 use App\Http\Controllers\Admin\CustomerController as AdminCustomerController;
+use App\Http\Controllers\Admin\NewsUpdateController;
 use App\Http\Controllers\Admin\WebsiteContentController;
 use App\Http\Controllers\Admin\ServiceController;
 use Illuminate\Support\Facades\Route;
@@ -77,5 +78,13 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('services/{service}/edit', [ServiceController::class, 'edit'])->name('services.edit');
     Route::put('services/{service}', [ServiceController::class, 'update'])->name('services.update');
     Route::delete('services/{service}', [ServiceController::class, 'destroy'])->name('services.destroy');
+
+        // News & Updates
+    Route::get('news', [NewsUpdateController::class, 'index'])->name('news.index');
+    Route::get('news/create', [NewsUpdateController::class, 'create'])->name('news.create');
+    Route::post('news', [NewsUpdateController::class, 'store'])->name('news.store');
+    Route::get('news/{news}/edit', [NewsUpdateController::class, 'edit'])->name('news.edit');
+    Route::put('news/{news}', [NewsUpdateController::class, 'update'])->name('news.update');
+    Route::delete('news/{news}', [NewsUpdateController::class, 'destroy'])->name('news.destroy');
 
     });

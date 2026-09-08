@@ -4,18 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Service extends Model
+class NewsUpdate extends Model
 {
     protected $fillable = [
         'title',
-        'description',
-        'icon',
-        'image',
+        'content',
+        'published_date',
         'display_order',
         'is_active',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
+        'published_date' => 'date',
     ];
 }

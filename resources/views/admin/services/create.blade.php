@@ -19,7 +19,7 @@
     <div class="row justify-content-center">
         <div class="col-lg-7">
             <div class="service-card">
-                <form method="POST" action="{{ route('admin.services.store') }}">
+                <form method="POST" action="{{ route('admin.services.store') }}" enctype="multipart/form-data">
                     @csrf
 
                     <div class="mb-3">
@@ -33,13 +33,9 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Icon (Bootstrap Icons class name)</label>
-                        <input type="text" name="icon" class="form-control" value="{{ old('icon', 'bi-cpu') }}"
-                               placeholder="e.g. bi-cpu, bi-phone, bi-tools">
-                        <div class="form-text">
-                            Browse icon names at
-                            <a href="https://icons.getbootstrap.com" target="_blank">icons.getbootstrap.com</a>
-                        </div>
+                        <label class="form-label">Card Image</label>
+                        <input type="file" name="image" class="form-control" accept="image/*">
+                        <div class="form-text">Recommended: a landscape photo, at least 600×400px.</div>
                     </div>
 
                     <div class="mb-4">

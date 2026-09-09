@@ -113,4 +113,58 @@
         </section>
     @endif
 
+    @if ($shopCategories->isNotEmpty())
+        <section class="py-5">
+            <div class="container py-4">
+                <div class="row mb-4">
+                    <div class="col-lg-6">
+                        <h2 class="mb-0">Shop</h2>
+                        <p class="text-secondary mb-0">Genuine parts and accessories, ready to ship.</p>
+                    </div>
+                </div>
+
+                @foreach ($shopCategories as $category)
+                    <div class="mb-5">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h4 class="font-display mb-0">{{ $category->name }}</h4>
+                            <a href="{{ route('shop.index', ['category' => $category->id]) }}" class="btn btn-outline-soft btn-sm">
+                                See More <i class="bi bi-arrow-right"></i>
+                            </a>
+                        </div>
+
+                        <div class="row g-4">
+                            @foreach ($category->products as $product)
+                                <div class="col-6 col-md-4 col-lg">
+                                    <a href="{{ route('shop.show', $product) }}" class="text-reset">
+                                        <div class="service-card service-card-image p-0 h-100">
+                                            @if ($product->image)
+                                                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="service-card-img">
+                                            @else
+                                                <div class="service-card-img service-card-img-placeholder">
+                                                    <i class="bi bi-image"></i>
+                                                </div>
+                                            @endif
+                                            <div class="service-card-body">
+                                                <h6 class="mb-1">{{ $product->name }}</h6>
+                                                @if ($product->description)
+                                                    <p class="small text-secondary mb-2">{{ \Illuminate\Support\Str::limit($product->description, 50) }}</p>
+                                                @endif
+                                                @if ($product->sale_price)
+                                                    <span class="text-decoration-line-through text-secondary small">Rs. {{ number_format($product->price, 2) }}</span>
+                                                    <strong class="d-block">Rs. {{ number_format($product->sale_price, 2) }}</strong>
+                                                @else
+                                                    <strong class="d-block">Rs. {{ number_format($product->price, 2) }}</strong>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </section>
+    @endif
+
 @endsection

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\NewsUpdate;
 use App\Models\Service;
 use App\Models\SiteSetting;
@@ -28,6 +29,21 @@ class HomeController extends Controller
             ->take(3)
             ->get();
 
-        return view('home', ['settings' => $settings, 'services' => $services, 'newsItems' => $newsItems]);
+        // For each active category, pull its 5 most recent active products.
+        // Categories with no active products are skipped so the home page
+        // never shows an empty section.
+        $shopCategories = Category::where('is_active', true)
+            ->with(['products' => function ($query) {
+                $query->where('is_active', true)->latest()->take(5);
+            }])
+            ->get()
+            ->filter(fn ($category) => $category->products->isNotEmpty());
+
+        return view('home', [
+            'settings' => $settings,
+            'services' => $services,
+            'newsItems' => $newsItems,
+            'shopCategories' => $shopCategories,
+        ]);
     }
 }

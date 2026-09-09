@@ -25,9 +25,22 @@
             <div class="collapse navbar-collapse" id="mainNav">
                 <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
                     <li class="nav-item">
+                        <a class="nav-link" href="{{ route('shop.index') }}">Shop</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="{{ route('repairs.track') }}">Track Repair</a>
                     </li>
                     @auth
+                        @unless (auth()->user()->isAdmin())
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('orders.index') }}">My Orders</a>
+                            </li>
+                        @endunless
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('cart.index') }}">
+                                <i class="bi bi-cart"></i> Cart
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('repairs.create') }}">Book Repair</a>
                         </li>

@@ -7,6 +7,13 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\RepairController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\ShopController;
 use App\Http\Controllers\Admin\CustomerController as AdminCustomerController;
 use App\Http\Controllers\Admin\NewsUpdateController;
 use App\Http\Controllers\Admin\WebsiteContentController;
@@ -15,7 +22,9 @@ use Illuminate\Support\Facades\Route;
 
 // Home page
 Route::get('/', [\App\Http\Controllers\Public\HomeController::class, 'index'])->name('home');
-
+// Shop — open to everyone
+Route::get('shop', [ShopController::class, 'index'])->name('shop.index');
+Route::get('shop/{product}', [ShopController::class, 'show'])->name('shop.show');
 // Track Repair — open to everyone, no login required
 Route::get('track-repair', [RepairController::class, 'trackForm'])->name('repairs.track');
 Route::post('track-repair', [RepairController::class, 'trackResult'])->name('repairs.track.result');
@@ -35,6 +44,21 @@ Route::middleware('auth')->group(function () {
 
     // Customer Dashboard
     Route::get('my-dashboard', [CustomerController::class, 'dashboard'])->name('customer.dashboard');
+
+        // Cart
+    Route::get('cart', [CartController::class, 'index'])->name('cart.index');
+    Route::post('cart/{product}/add', [CartController::class, 'add'])->name('cart.add');
+    Route::put('cart/{itemId}', [CartController::class, 'update'])->name('cart.update');
+    Route::delete('cart/{itemId}', [CartController::class, 'remove'])->name('cart.remove');
+
+        // Checkout
+    Route::get('checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+    Route::post('checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+    Route::get('checkout/confirmation/{orderNumber}', [CheckoutController::class, 'confirmation'])->name('checkout.confirmation');    // Checkout
+
+        // My Orders
+    Route::get('my-orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('my-orders/{order}', [OrderController::class, 'show'])->name('orders.show');
 
     // Book Repair
     Route::get('book-repair', [RepairController::class, 'create'])->name('repairs.create');
@@ -87,4 +111,29 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::put('news/{news}', [NewsUpdateController::class, 'update'])->name('news.update');
     Route::delete('news/{news}', [NewsUpdateController::class, 'destroy'])->name('news.destroy');
 
+        // Categories
+    Route::get('categories', [CategoryController::class, 'index'])->name('categories.index');
+    Route::get('categories/create', [CategoryController::class, 'create'])->name('categories.create');
+    Route::post('categories', [CategoryController::class, 'store'])->name('categories.store');
+    Route::get('categories/{category}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
+    Route::put('categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
+    Route::delete('categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+
+    // Products
+    Route::get('products', [ProductController::class, 'index'])->name('products.index');
+    Route::get('products/create', [ProductController::class, 'create'])->name('products.create');
+    Route::post('products', [ProductController::class, 'store'])->name('products.store');
+    Route::get('products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
+    Route::put('products/{product}', [ProductController::class, 'update'])->name('products.update');
+    Route::delete('products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
+
+        // Orders
+    Route::get('orders', [AdminOrderController::class, 'index'])->name('orders.index');
+    Route::get('orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
+    Route::put('orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.update-status');
+
+
+
+
+    
     });

@@ -68,6 +68,26 @@
                         <i class="bi bi-layout-text-window"></i> Website Content
                     </a>
                 </li>
+
+                                <li class="nav-item">
+                    <a class="admin-nav-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}"
+                       href="{{ route('admin.categories.index') }}">
+                        <i class="bi bi-tags"></i> Categories
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="admin-nav-link {{ request()->routeIs('admin.products.*') ? 'active' : '' }}"
+                       href="{{ route('admin.products.index') }}">
+                        <i class="bi bi-box-seam"></i> Products
+                    </a>
+                </li>
+
+                                <li class="nav-item">
+                    <a class="admin-nav-link {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}"
+                       href="{{ route('admin.orders.index') }}">
+                        <i class="bi bi-receipt"></i> Orders
+                    </a>
+                </li>
                 {{-- Products, Orders links will be added as the shop module is built --}}
             </ul>
         </nav>

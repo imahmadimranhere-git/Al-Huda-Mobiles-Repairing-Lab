@@ -5,15 +5,51 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Product;
 use App\Services\OrderNumberService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class CheckoutController extends Controller
 {
-    // Show the checkout form (shipping details + order summary)
+    // Skip the cart entirely — buy a single product right away
+    public function buyNow(Product $product)
+    {
+        if (! $product->isInStock()) {
+            return back()->withErrors(['stock' => 'This product is currently out of stock.']);
+        }
+
+        session(['buy_now_product_id' => $product->id, 'buy_now_quantity' => 1]);
+
+        return redirect()->route('checkout.index');
+    }
+
     public function index()
     {
+        // Buy Now flow: checkout shows just the one product, ignoring the cart
+        if (session()->has('buy_now_product_id')) {
+            $product = Product::find(session('buy_now_product_id'));
+
+            if (! $product) {
+                session()->forget(['buy_now_product_id', 'buy_now_quantity']);
+                return redirect()->route('shop.index');
+            }
+
+            $quantity = session('buy_now_quantity', 1);
+
+            $items = collect([(object) [
+                'product' => $product,
+                'quantity' => $quantity,
+                'subtotal' => $product->final_price * $quantity,
+            ]]);
+
+            return view('checkout.index', [
+                'items' => $items,
+                'total' => $items->sum('subtotal'),
+                'isBuyNow' => true,
+            ]);
+        }
+
         $cart = Cart::firstOrCreate(['user_id' => auth()->id()]);
         $cart->load('items.product');
 
@@ -21,10 +57,13 @@ class CheckoutController extends Controller
             return redirect()->route('cart.index')->with('status', 'Your cart is empty.');
         }
 
-        return view('checkout.index', ['cart' => $cart]);
+        return view('checkout.index', [
+            'items' => $cart->items,
+            'total' => $cart->total,
+            'isBuyNow' => false,
+        ]);
     }
 
-    // Place the order: create Order + OrderItems, reduce stock, empty the cart
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -33,6 +72,45 @@ class CheckoutController extends Controller
             'shipping_address' => ['required', 'string', 'max:500'],
         ]);
 
+        // Buy Now flow: create the order from the single product in session
+        if (session()->has('buy_now_product_id')) {
+            $product = Product::findOrFail(session('buy_now_product_id'));
+            $quantity = session('buy_now_quantity', 1);
+
+            if ($quantity > $product->stock) {
+                return back()->withErrors(['stock' => "Not enough stock for {$product->name}."]);
+            }
+
+            $order = DB::transaction(function () use ($product, $quantity, $validated) {
+                $order = Order::create([
+                    'order_number' => OrderNumberService::generate(),
+                    'user_id' => auth()->id(),
+                    'customer_name' => $validated['customer_name'],
+                    'customer_phone' => $validated['customer_phone'],
+                    'shipping_address' => $validated['shipping_address'],
+                    'total' => $product->final_price * $quantity,
+                    'status' => 'pending',
+                ]);
+
+                OrderItem::create([
+                    'order_id' => $order->id,
+                    'product_id' => $product->id,
+                    'product_name' => $product->name,
+                    'price' => $product->final_price,
+                    'quantity' => $quantity,
+                ]);
+
+                $product->decrement('stock', $quantity);
+
+                return $order;
+            });
+
+            session()->forget(['buy_now_product_id', 'buy_now_quantity']);
+
+            return redirect()->route('checkout.confirmation', $order->order_number);
+        }
+
+        // Normal cart checkout flow
         $cart = Cart::firstOrCreate(['user_id' => auth()->id()]);
         $cart->load('items.product');
 
@@ -40,7 +118,6 @@ class CheckoutController extends Controller
             return redirect()->route('cart.index')->with('status', 'Your cart is empty.');
         }
 
-        // Make sure stock is still available before placing the order
         foreach ($cart->items as $item) {
             if ($item->quantity > $item->product->stock) {
                 return back()->withErrors([
@@ -69,11 +146,9 @@ class CheckoutController extends Controller
                     'quantity' => $item->quantity,
                 ]);
 
-                // Reduce stock now that the order is confirmed
                 $item->product->decrement('stock', $item->quantity);
             }
 
-            // Empty the cart now that it's been turned into an order
             $cart->items()->delete();
 
             return $order;
@@ -82,7 +157,6 @@ class CheckoutController extends Controller
         return redirect()->route('checkout.confirmation', $order->order_number);
     }
 
-    // Show order confirmation
     public function confirmation(string $orderNumber)
     {
         $order = Order::where('order_number', $orderNumber)

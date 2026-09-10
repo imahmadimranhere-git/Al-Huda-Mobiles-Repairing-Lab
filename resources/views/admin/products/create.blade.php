@@ -59,9 +59,15 @@
                         </div>
                     </div>
 
-                    <div class="mb-4">
-                        <label class="form-label">Product Image</label>
+                                        <div class="mb-3">
+                        <label class="form-label">Main Image (cover photo)</label>
                         <input type="file" name="image" class="form-control" accept="image/*">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">Additional Images (optional gallery)</label>
+                        <input type="file" name="images[]" class="form-control" accept="image/*" multiple>
+                        <div class="form-text">You can select multiple photos at once.</div>
                     </div>
 
                     <button type="submit" class="btn btn-accent w-100">Add Product</button>

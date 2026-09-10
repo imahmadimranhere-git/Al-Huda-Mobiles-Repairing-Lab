@@ -55,7 +55,7 @@ Route::middleware('auth')->group(function () {
     Route::get('checkout', [CheckoutController::class, 'index'])->name('checkout.index');
     Route::post('checkout', [CheckoutController::class, 'store'])->name('checkout.store');
     Route::get('checkout/confirmation/{orderNumber}', [CheckoutController::class, 'confirmation'])->name('checkout.confirmation');    // Checkout
-
+        Route::post('checkout/buy-now/{product}', [CheckoutController::class, 'buyNow'])->name('checkout.buy-now');
         // My Orders
     Route::get('my-orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('my-orders/{order}', [OrderController::class, 'show'])->name('orders.show');
@@ -126,7 +126,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
     Route::put('products/{product}', [ProductController::class, 'update'])->name('products.update');
     Route::delete('products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
-
+        Route::delete('products/{product}/images/{image}', [ProductController::class, 'deleteImage'])->name('products.images.destroy');
         // Orders
     Route::get('orders', [AdminOrderController::class, 'index'])->name('orders.index');
     Route::get('orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');

@@ -39,7 +39,7 @@
         <div class="col-lg-5">
             <div class="service-card">
                 <h5 class="mb-3">Update Status</h5>
-                <form method="POST" action="{{ route('admin.orders.update-status', $order) }}">
+                                <form method="POST" action="{{ route('admin.orders.update-status', $order) }}" onsubmit="return confirmOrderStatus(this);">
                     @csrf
                     @method('PUT')
 
@@ -58,4 +58,16 @@
             </div>
         </div>
     </div>
+
+
+<script>
+    function confirmOrderStatus(form) {
+        const status = form.querySelector('select[name="status"]').value;
+        if (status === 'completed') {
+            return confirm('Mark this order as Completed? This will finalize the order.');
+        }
+        return true;
+    }
+</script>
+
 @endsection

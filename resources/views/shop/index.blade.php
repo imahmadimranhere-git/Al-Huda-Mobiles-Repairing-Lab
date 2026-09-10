@@ -7,6 +7,14 @@
         <div class="container">
             <h2 class="font-display mb-4">Shop</h2>
 
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    @foreach ($errors->all() as $error)
+                        <p class="mb-0">{{ $error }}</p>
+                    @endforeach
+                </div>
+            @endif
+
             <div class="service-card mb-4">
                 <form method="GET" action="{{ route('shop.index') }}" class="row g-2 align-items-end">
                     <div class="col-md-6">
@@ -30,36 +38,10 @@
                 </form>
             </div>
 
-            <div class="row g-4">
+            <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
                 @forelse ($products as $product)
-                    <div class="col-md-4">
-                        <div class="service-card service-card-image p-0">
-                            <a href="{{ route('shop.show', $product) }}">
-                                @if ($product->image)
-                                    <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="service-card-img">
-                                @else
-                                    <div class="service-card-img service-card-img-placeholder">
-                                        <i class="bi bi-image"></i>
-                                    </div>
-                                @endif
-                            </a>
-                            <div class="service-card-body">
-                                <h5><a href="{{ route('shop.show', $product) }}" class="text-reset">{{ $product->name }}</a></h5>
-                                <p class="mb-2">
-                                    @if ($product->sale_price)
-                                        <span class="text-decoration-line-through text-secondary small">Rs. {{ number_format($product->price, 2) }}</span>
-                                        <strong>Rs. {{ number_format($product->sale_price, 2) }}</strong>
-                                    @else
-                                        <strong>Rs. {{ number_format($product->price, 2) }}</strong>
-                                    @endif
-                                </p>
-                                @if ($product->isInStock())
-                                    <a href="{{ route('shop.show', $product) }}" class="btn btn-accent btn-sm w-100">View Product</a>
-                                @else
-                                    <span class="badge bg-secondary">Out of Stock</span>
-                                @endif
-                            </div>
-                        </div>
+                    <div class="col">
+                        @include('partials.product-card', ['product' => $product])
                     </div>
                 @empty
                     <div class="col-12">

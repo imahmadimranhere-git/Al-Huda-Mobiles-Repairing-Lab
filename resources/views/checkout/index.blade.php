@@ -45,7 +45,7 @@
                 <div class="col-lg-5">
                     <div class="service-card">
                         <h5 class="mb-3">Order Summary</h5>
-                        @foreach ($cart->items as $item)
+                        @foreach ($items as $item)
                             <div class="ticket-row">
                                 <span>{{ $item->product->name }} × {{ $item->quantity }}</span>
                                 <span>Rs. {{ number_format($item->subtotal, 2) }}</span>
@@ -53,7 +53,7 @@
                         @endforeach
                         <div class="ticket-row">
                             <span class="fw-bold">Total</span>
-                            <span class="fw-bold">Rs. {{ number_format($cart->total, 2) }}</span>
+                            <span class="fw-bold">Rs. {{ number_format($total, 2) }}</span>
                         </div>
 
                         <button type="submit" form="checkoutForm" class="btn btn-accent w-100 mt-3">Place Order</button>

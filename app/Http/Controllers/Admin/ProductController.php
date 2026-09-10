@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -47,6 +48,7 @@ class ProductController extends Controller
             'sale_price' => ['nullable', 'numeric', 'min:0', 'lt:price'],
             'stock' => ['required', 'integer', 'min:0'],
             'image' => ['nullable', 'image', 'max:2048'],
+            'images.*' => ['nullable', 'image', 'max:2048'],
         ]);
 
         $imagePath = null;
@@ -54,7 +56,7 @@ class ProductController extends Controller
             $imagePath = $request->file('image')->store('products', 'public');
         }
 
-        Product::create([
+        $product = Product::create([
             'category_id' => $validated['category_id'] ?? null,
             'name' => $validated['name'],
             'slug' => Str::slug($validated['name']) . '-' . Str::random(6),
@@ -66,6 +68,17 @@ class ProductController extends Controller
             'is_active' => true,
         ]);
 
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $index => $file) {
+                $path = $file->store('products', 'public');
+                ProductImage::create([
+                    'product_id' => $product->id,
+                    'image' => $path,
+                    'display_order' => $index,
+                ]);
+            }
+        }
+
         return redirect()->route('admin.products.index')->with('status', 'Product added.');
     }
 
@@ -74,6 +87,7 @@ class ProductController extends Controller
         abort_unless(auth()->user()->isAdmin(), 403, 'Access denied.');
 
         $categories = Category::orderBy('name')->get();
+        $product->load('images');
 
         return view('admin.products.edit', ['product' => $product, 'categories' => $categories]);
     }
@@ -90,6 +104,7 @@ class ProductController extends Controller
             'sale_price' => ['nullable', 'numeric', 'min:0', 'lt:price'],
             'stock' => ['required', 'integer', 'min:0'],
             'image' => ['nullable', 'image', 'max:2048'],
+            'images.*' => ['nullable', 'image', 'max:2048'],
             'is_active' => ['nullable', 'boolean'],
         ]);
 
@@ -112,7 +127,31 @@ class ProductController extends Controller
             'is_active' => $request->boolean('is_active'),
         ]);
 
-        return redirect()->route('admin.products.index')->with('status', 'Product updated.');
+        if ($request->hasFile('images')) {
+            $startOrder = $product->images()->max('display_order') + 1;
+            foreach ($request->file('images') as $index => $file) {
+                $path = $file->store('products', 'public');
+                ProductImage::create([
+                    'product_id' => $product->id,
+                    'image' => $path,
+                    'display_order' => $startOrder + $index,
+                ]);
+            }
+        }
+
+        return redirect()->route('admin.products.edit', $product)->with('status', 'Product updated.');
+    }
+
+    // Remove one gallery image (not the main "image" column)
+    public function deleteImage(Product $product, ProductImage $image)
+    {
+        abort_unless(auth()->user()->isAdmin(), 403, 'Access denied.');
+        abort_unless($image->product_id === $product->id, 404);
+
+        Storage::disk('public')->delete($image->image);
+        $image->delete();
+
+        return back()->with('status', 'Image removed.');
     }
 
     public function destroy(Product $product)
@@ -121,6 +160,9 @@ class ProductController extends Controller
 
         if ($product->image) {
             Storage::disk('public')->delete($product->image);
+        }
+        foreach ($product->images as $img) {
+            Storage::disk('public')->delete($img->image);
         }
 
         $product->delete();

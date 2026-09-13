@@ -23,26 +23,20 @@
         </div>
 
         @if ($product->isInStock())
-            @auth
-                <div class="product-card-actions">
-                    <form method="POST" action="{{ route('cart.add', $product) }}">
-                        @csrf
-                        <button type="submit" class="btn btn-outline-soft btn-sm">
-                            <i class="bi bi-cart-plus"></i> Add
-                        </button>
-                    </form>
-                    <form method="POST" action="{{ route('checkout.buy-now', $product) }}">
-                        @csrf
-                        <button type="submit" class="btn btn-accent btn-sm">
-                            <i class="bi bi-lightning-charge-fill"></i> Buy Now
-                        </button>
-                    </form>
-                </div>
-            @else
-                <a href="{{ route('login') }}" class="btn btn-accent btn-sm w-100">
-                    <i class="bi bi-box-arrow-in-right"></i> Login to Buy
-                </a>
-            @endauth
+            <div class="product-card-actions">
+                <form method="POST" action="{{ route('cart.add', $product) }}">
+                    @csrf
+                    <button type="submit" class="btn btn-outline-soft btn-sm">
+                        <i class="bi bi-cart-plus"></i> Add to Cart
+                    </button>
+                </form>
+                <form method="POST" action="{{ route('checkout.buy-now', $product) }}">
+                    @csrf
+                    <button type="submit" class="btn btn-accent btn-sm">
+                        <i class="bi bi-lightning-charge-fill"></i> Buy Now
+                    </button>
+                </form>
+            </div>
         @else
             <span class="badge bg-secondary">Out of Stock</span>
         @endif

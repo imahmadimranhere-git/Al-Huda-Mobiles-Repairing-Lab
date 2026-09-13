@@ -17,7 +17,9 @@ use App\Http\Controllers\ShopController;
 use App\Http\Controllers\Admin\CustomerController as AdminCustomerController;
 use App\Http\Controllers\Admin\NewsUpdateController;
 use App\Http\Controllers\Admin\WebsiteContentController;
+use App\Http\Controllers\Public\NewsController;
 use App\Http\Controllers\Admin\ServiceController;
+use App\Http\Controllers\RepairApprovalController;
 use Illuminate\Support\Facades\Route;
 
 // Home page
@@ -28,6 +30,14 @@ Route::get('shop/{product}', [ShopController::class, 'show'])->name('shop.show')
 // Track Repair — open to everyone, no login required
 Route::get('track-repair', [RepairController::class, 'trackForm'])->name('repairs.track');
 Route::post('track-repair', [RepairController::class, 'trackResult'])->name('repairs.track.result');
+
+Route::get('repairs/approve/{trackingId}', [RepairApprovalController::class, 'show'])->name('repairs.approve');
+Route::post('repairs/approve/{trackingId}', [RepairApprovalController::class, 'verify'])->name('repairs.approve.verify');
+
+// Direct tracking view by ID (used after approval, and by QR code)
+Route::get('track/{trackingId}', [RepairController::class, 'trackDirect'])->name('repairs.track.result.direct');
+
+Route::get('news-updates', [NewsController::class, 'index'])->name('news.index');
 
 // Guest-only routes (login/register)
 Route::middleware('guest')->group(function () {
@@ -132,6 +142,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
     Route::put('orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.update-status');
 
+    Route::post('repairs/{repair}/resend-otp', [AdminRepairController::class, 'resendOtp'])->name('repairs.resend-otp');
 
 
 

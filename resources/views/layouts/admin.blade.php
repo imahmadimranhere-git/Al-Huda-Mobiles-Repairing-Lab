@@ -20,8 +20,15 @@
     {{-- Sidebar: fixed on every screen size. On tablet/mobile it's off-canvas
          and slides in via the .is-open class (toggled by JS below). --}}
     <aside class="admin-sidebar" id="adminSidebar">
-        <div class="admin-sidebar-brand">
-            <h5 class="mb-0 font-display"><i class="bi bi-cpu"></i> Al Huda Mobiles Repairing Lab</h5>
+                <div class="admin-sidebar-brand">
+            @php
+                $sidebarLogo = \App\Models\SiteSetting::get('site_logo');
+            @endphp
+            @if ($sidebarLogo)
+                <img src="{{ asset('storage/' . $sidebarLogo) }}" alt="Logo" style="height: 32px; object-fit: contain;">
+            @else
+                <h5 class="mb-0 font-display"><i class="bi bi-cpu"></i> Al Huda Mobiles Repairing Lab</h5>
+            @endif
         </div>
 
         <nav class="admin-sidebar-nav">

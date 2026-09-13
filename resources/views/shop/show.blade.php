@@ -52,31 +52,27 @@
 
                     <p class="text-secondary mb-4">{{ $product->description }}</p>
 
-                    @if ($product->isInStock())
-                        @auth
-                            <div class="row g-2">
-                                <div class="col-4">
-                                    <form method="POST" action="{{ route('cart.add', $product) }}">
-                                        @csrf
-                                        <input type="number" name="quantity" value="1" min="1" max="{{ $product->stock }}" class="form-control mb-2">
-                                        <button type="submit" class="btn btn-outline-soft w-100">
-                                            <i class="bi bi-cart-plus"></i> Add to Cart
-                                        </button>
-                                    </form>
-                                </div>
-                                <div class="col-8 d-flex align-items-end">
-                                    <form method="POST" action="{{ route('checkout.buy-now', $product) }}" class="w-100">
-                                        @csrf
-                                        <button type="submit" class="btn btn-accent w-100">
-                                            <i class="bi bi-lightning-charge-fill"></i> Buy Now
-                                        </button>
-                                    </form>
-                                </div>
+                                       @if ($product->isInStock())
+                        <div class="row g-2">
+                            <div class="col-4">
+                                <form method="POST" action="{{ route('cart.add', $product) }}">
+                                    @csrf
+                                    <input type="number" name="quantity" value="1" min="1" max="{{ $product->stock }}" class="form-control mb-2">
+                                    <button type="submit" class="btn btn-outline-soft w-100">
+                                        <i class="bi bi-cart-plus"></i> Add to Cart
+                                    </button>
+                                </form>
                             </div>
-                            <p class="text-secondary small mt-2">{{ $product->stock }} in stock</p>
-                        @else
-                            <a href="{{ route('login') }}" class="btn btn-accent">Login to Buy</a>
-                        @endauth
+                            <div class="col-8 d-flex align-items-end">
+                                <form method="POST" action="{{ route('checkout.buy-now', $product) }}" class="w-100">
+                                    @csrf
+                                    <button type="submit" class="btn btn-accent w-100">
+                                        <i class="bi bi-lightning-charge-fill"></i> Buy Now
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        <p class="text-secondary small mt-2">{{ $product->stock }} in stock</p>
                     @else
                         <span class="badge bg-secondary">Out of Stock</span>
                     @endif

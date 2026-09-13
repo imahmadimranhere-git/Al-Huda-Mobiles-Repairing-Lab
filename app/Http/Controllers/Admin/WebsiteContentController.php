@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\SiteSetting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class WebsiteContentController extends Controller
 {
@@ -13,6 +14,7 @@ class WebsiteContentController extends Controller
         abort_unless(auth()->user()->isAdmin(), 403, 'Access denied.');
 
         $settings = [
+            'site_logo' => SiteSetting::get('site_logo'),
             'hero_eyebrow' => SiteSetting::get('hero_eyebrow'),
             'hero_heading' => SiteSetting::get('hero_heading'),
             'hero_description' => SiteSetting::get('hero_description'),
@@ -32,6 +34,7 @@ class WebsiteContentController extends Controller
         abort_unless(auth()->user()->isAdmin(), 403, 'Access denied.');
 
         $validated = $request->validate([
+            'logo' => ['nullable', 'image', 'max:1024'],
             'hero_eyebrow' => ['nullable', 'string', 'max:255'],
             'hero_heading' => ['nullable', 'string', 'max:255'],
             'hero_description' => ['nullable', 'string', 'max:1000'],
@@ -42,6 +45,18 @@ class WebsiteContentController extends Controller
             'contact_email' => ['nullable', 'email', 'max:255'],
             'contact_address' => ['nullable', 'string', 'max:255'],
         ]);
+
+        // Logo is handled separately since it's a file, not a plain text value
+        if ($request->hasFile('logo')) {
+            $oldLogo = SiteSetting::get('site_logo');
+            if ($oldLogo) {
+                Storage::disk('public')->delete($oldLogo);
+            }
+            $path = $request->file('logo')->store('branding', 'public');
+            SiteSetting::set('site_logo', $path);
+        }
+
+        unset($validated['logo']);
 
         foreach ($validated as $key => $value) {
             SiteSetting::set($key, $value);

@@ -92,10 +92,11 @@
     @if ($newsItems->isNotEmpty())
         <section class="py-5" style="background: var(--color-bg-panel-alt);">
             <div class="container py-4">
-                <div class="row">
-                    <div class="col-lg-6">
-                        <h2 class="mb-5">News &amp; Updates</h2>
-                    </div>
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="mb-0">News &amp; Updates</h2>
+                    <a href="{{ route('news.index') }}" class="btn btn-outline-soft btn-sm">
+                        See More <i class="bi bi-arrow-right"></i>
+                    </a>
                 </div>
 
                 <div class="row g-4">
@@ -113,7 +114,7 @@
         </section>
     @endif
 
-       @if ($shopCategories->isNotEmpty())
+    @if ($shopCategories->isNotEmpty())
         <section class="py-5">
             <div class="container py-4">
                 <div class="row mb-4">

@@ -17,13 +17,24 @@
         </div>
     @endif
 
-    <form method="POST" action="{{ route('admin.website.home.update') }}">
+        <form method="POST" action="{{ route('admin.website.home.update') }}" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
         <div class="service-card mb-4">
-            <h5 class="mb-3">Hero Section</h5>
+            <h5 class="mb-3">Site Logo</h5>
 
+            @if ($settings['site_logo'])
+                <img src="{{ asset('storage/' . $settings['site_logo']) }}" alt="Current logo"
+                     class="mb-3" style="height: 50px; object-fit: contain;">
+            @endif
+
+            <input type="file" name="logo" class="form-control" accept="image/*">
+            <div class="form-text">Recommended: a transparent PNG, roughly 200×50px. Leave blank to keep the current logo.</div>
+        </div>
+
+        <div class="service-card mb-4">
+            <h5 class="mb-3">Hero Section</h5>
             <div class="mb-3">
                 <label class="form-label">Eyebrow Text (small line above the heading)</label>
                 <input type="text" name="hero_eyebrow" class="form-control" value="{{ old('hero_eyebrow', $settings['hero_eyebrow']) }}">

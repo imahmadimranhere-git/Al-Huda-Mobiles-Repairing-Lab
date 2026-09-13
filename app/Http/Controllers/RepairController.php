@@ -75,4 +75,20 @@ class RepairController extends Controller
 
         return view('repairs.track-result', ['repair' => $repair]);
     }
-}
+
+
+        // Direct tracking view by tracking ID — used by QR codes and after approval
+    public function trackDirect(string $trackingId)
+    {
+        $repair = Repair::where('tracking_id', $trackingId)->first();
+
+        if (! $repair) {
+            abort(404, 'No repair found with this tracking ID.');
+        }
+
+        $repair->load('statusHistories', 'user');
+
+        return view('repairs.track-result', ['repair' => $repair]);
+    }
+
+    }

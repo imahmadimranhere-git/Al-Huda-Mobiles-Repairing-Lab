@@ -14,50 +14,85 @@
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg site-navbar">
-        <div class="container">
-            <a class="navbar-brand brand" href="{{ route('home') }}">
-                <i class="bi bi-cpu"></i> Al Huda Mobiles Repairing Lab
+    @php
+        $siteLogo = \App\Models\SiteSetting::get('site_logo');
+        $cartCount = auth()->check()
+            ? (\App\Models\Cart::where('user_id', auth()->id())->first()?->items()->sum('quantity') ?? 0)
+            : 0;
+    @endphp
+
+    <header class="site-navbar">
+        <div class="nav-inner">
+            {{-- Logo — left, untouched, own proportions preserved --}}
+            <a href="{{ route('home') }}" class="nav-logo">
+                @if ($siteLogo)
+                    <img src="{{ asset('storage/' . $siteLogo) }}" alt="Al Huda Mobiles Repairing Lab">
+                @else
+                    <span class="nav-logo-fallback"><i class="bi bi-cpu"></i> Al Huda Mobiles Repairing Lab</span>
+                @endif
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="mainNav">
-                <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('shop.index') }}">Shop</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('repairs.track') }}">Track Repair</a>
-                    </li>
-                    @auth
-                        @unless (auth()->user()->isAdmin())
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('orders.index') }}">My Orders</a>
+
+            {{-- Center nav links (desktop) --}}
+            <nav class="nav-links d-none d-lg-flex">
+                <a href="{{ route('home') }}" class="nav-link-item {{ request()->routeIs('home') ? 'active' : '' }}">Home</a>
+                <a href="{{ route('shop.index') }}" class="nav-link-item {{ request()->routeIs('shop.*') ? 'active' : '' }}">Shop</a>
+                <a href="{{ route('repairs.track') }}" class="nav-link-item {{ request()->routeIs('repairs.track*') ? 'active' : '' }}">Track Repair</a>
+                <a href="{{ route('repairs.create') }}" class="nav-link-item {{ request()->routeIs('repairs.create') ? 'active' : '' }}">Book Repair</a>
+                <a href="{{ route('orders.index') }}" class="nav-link-item {{ request()->routeIs('orders.*') ? 'active' : '' }}">My Orders</a>
+                <a href="{{ route('news.index') }}" class="nav-link-item {{ request()->routeIs('news.*') ? 'active' : '' }}">News &amp; Updates</a>
+            </nav>
+
+            {{-- Right icons + mobile toggle --}}
+            <div class="nav-actions">
+                <div class="dropdown">
+                    <button class="nav-icon-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Account">
+                        <i class="bi bi-person"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        @auth
+                            @unless (auth()->user()->isAdmin())
+                                <li><a class="dropdown-item" href="{{ route('customer.dashboard') }}">My Repairs</a></li>
+                                <li><a class="dropdown-item" href="{{ route('orders.index') }}">My Orders</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                            @endunless
+                            <li>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="dropdown-item">Logout</button>
+                                </form>
                             </li>
-                        @endunless
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('cart.index') }}">
-                                <i class="bi bi-cart"></i> Cart
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('repairs.create') }}">Book Repair</a>
-                        </li>
-                        <li class="nav-item">
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <button class="btn btn-outline-soft btn-sm" type="submit">Logout</button>
-                            </form>
-                        </li>
-                    @else
-                        <li class="nav-item"><a class="btn btn-outline-soft btn-sm" href="{{ route('login') }}">Login</a></li>
-                        <li class="nav-item"><a class="btn btn-accent btn-sm" href="{{ route('register') }}">Register</a></li>
-                    @endauth
-                </ul>
+                        @else
+                            <li><a class="dropdown-item" href="{{ route('login') }}">Login</a></li>
+                            <li><a class="dropdown-item" href="{{ route('register') }}">Register</a></li>
+                        @endauth
+                    </ul>
+                </div>
+
+                <a href="{{ route('cart.index') }}" class="nav-icon-btn position-relative" aria-label="Cart">
+                    <i class="bi bi-cart3"></i>
+                    @if ($cartCount > 0)
+                        <span class="cart-count-badge">{{ $cartCount }}</span>
+                    @endif
+                </a>
+
+                <button class="nav-hamburger d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#mobileNav" aria-label="Menu">
+                    <i class="bi bi-list"></i>
+                </button>
             </div>
         </div>
-    </nav>
+
+        {{-- Mobile menu panel --}}
+        <div class="collapse d-lg-none" id="mobileNav">
+            <nav class="nav-links-mobile">
+                <a href="{{ route('home') }}" class="nav-link-item {{ request()->routeIs('home') ? 'active' : '' }}">Home</a>
+                <a href="{{ route('shop.index') }}" class="nav-link-item {{ request()->routeIs('shop.*') ? 'active' : '' }}">Shop</a>
+                <a href="{{ route('repairs.track') }}" class="nav-link-item {{ request()->routeIs('repairs.track*') ? 'active' : '' }}">Track Repair</a>
+                <a href="{{ route('repairs.create') }}" class="nav-link-item {{ request()->routeIs('repairs.create') ? 'active' : '' }}">Book Repair</a>
+                <a href="{{ route('orders.index') }}" class="nav-link-item {{ request()->routeIs('orders.*') ? 'active' : '' }}">My Orders</a>
+                <a href="{{ route('news.index') }}" class="nav-link-item {{ request()->routeIs('news.*') ? 'active' : '' }}">News &amp; Updates</a>
+            </nav>
+        </div>
+    </header>
 
     @if (session('status'))
         <div class="container mt-3">
@@ -101,14 +136,11 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Auto-dismiss any success/error alert after 3 seconds, with a short fade-out.
         document.querySelectorAll('.alert').forEach(function (alertBox) {
             setTimeout(function () {
                 alertBox.style.transition = 'opacity 0.4s ease';
                 alertBox.style.opacity = '0';
-                setTimeout(function () {
-                    alertBox.remove();
-                }, 400);
+                setTimeout(function () { alertBox.remove(); }, 400);
             }, 3000);
         });
     </script>

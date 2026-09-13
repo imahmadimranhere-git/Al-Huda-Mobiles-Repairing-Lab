@@ -31,12 +31,14 @@ class LoginController extends Controller
 
         $user = Auth::user();
 
-        // Admin seedha admin dashboard par jayega, Customer apne dashboard par
+        // Admin goes to the admin panel. Customers land on the same public
+        // home page they saw before logging in — "My Repairs" is still
+        // reachable from the navbar, but isn't forced on them.
         if ($user->isAdmin()) {
             return redirect()->route('admin.dashboard');
         }
 
-        return redirect()->route('customer.dashboard');
+        return redirect()->intended(route('home'));
     }
 
     public function destroy(Request $request)

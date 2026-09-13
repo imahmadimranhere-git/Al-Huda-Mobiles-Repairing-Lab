@@ -33,6 +33,12 @@
                         </div>
                     </div>
 
+                    <div class="mb-3">
+                        <label class="form-label">Customer Email (for approval code)</label>
+                        <input type="email" name="approval_email" class="form-control" value="{{ old('approval_email') }}" required>
+                        <div class="form-text">An approval code will be sent here. The customer must confirm before the repair is finalized.</div>
+                    </div>
+
                     <div class="row g-3 mb-3">
                         <div class="col-md-6">
                             <label class="form-label">Device Brand</label>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\RepairApprovalOtpMail;
 use App\Models\Repair;
 use App\Models\RepairStatusHistory;
 use App\Models\Role;
@@ -10,6 +11,7 @@ use App\Models\User;
 use App\Services\TrackingIdService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class RepairController extends Controller
@@ -24,7 +26,6 @@ class RepairController extends Controller
         'cancelled',
     ];
 
-    // List all repairs, newest first, with basic search
     public function index(Request $request)
     {
         abort_unless(auth()->user()->isAdmin(), 403, 'Access denied.');
@@ -52,12 +53,11 @@ class RepairController extends Controller
         ]);
     }
 
-    // Show a single repair with full detail + timeline
     public function show(Repair $repair)
     {
         abort_unless(auth()->user()->isAdmin(), 403, 'Access denied.');
 
-        $repair->load('user', 'technician', 'statusHistories.changedBy');
+        $repair->load('user', 'technician', 'statusHistories.changedBy', 'delivery');
 
         $technicians = User::whereHas('role', fn ($q) => $q->where('slug', 'technician'))->get();
 
@@ -68,7 +68,6 @@ class RepairController extends Controller
         ]);
     }
 
-    // Update a repair's status and log it in the history table
     public function updateStatus(Request $request, Repair $repair)
     {
         abort_unless(auth()->user()->isAdmin(), 403, 'Access denied.');
@@ -105,7 +104,6 @@ class RepairController extends Controller
         return back()->with('status', 'Repair updated successfully.');
     }
 
-    // Show the walk-in repair entry form
     public function walkInCreate()
     {
         abort_unless(auth()->user()->isAdmin(), 403, 'Access denied.');
@@ -113,7 +111,6 @@ class RepairController extends Controller
         return view('admin.repairs.walk-in');
     }
 
-    // Handle walk-in repair submission
     public function walkInStore(Request $request)
     {
         abort_unless(auth()->user()->isAdmin(), 403, 'Access denied.');
@@ -121,14 +118,12 @@ class RepairController extends Controller
         $validated = $request->validate([
             'customer_name' => ['required', 'string', 'max:255'],
             'phone' => ['required', 'string', 'max:20'],
+            'approval_email' => ['required', 'email', 'max:255'],
             'device_brand' => ['required', 'string', 'max:255'],
             'device_model' => ['required', 'string', 'max:255'],
             'issue' => ['required', 'string', 'max:1000'],
         ]);
 
-        // Reuse an existing customer record if this phone number was seen before,
-        // otherwise create a lightweight account. Email is left blank —
-        // walk-in customers don't need to log in.
         $customer = User::where('phone', $validated['phone'])->first();
 
         if (! $customer) {
@@ -143,9 +138,14 @@ class RepairController extends Controller
             ]);
         }
 
+        $otpCode = (string) random_int(100000, 999999);
+
         $repair = Repair::create([
             'tracking_id' => TrackingIdService::generate(),
             'user_id' => $customer->id,
+            'approval_email' => $validated['approval_email'],
+            'otp_code' => $otpCode,
+            'otp_expires_at' => now()->addMinutes(15),
             'device_brand' => $validated['device_brand'],
             'device_model' => $validated['device_model'],
             'issue' => $validated['issue'],
@@ -156,11 +156,29 @@ class RepairController extends Controller
             'repair_id' => $repair->id,
             'old_status' => null,
             'new_status' => 'received',
-            'note' => 'Walk-in repair created by ' . auth()->user()->name,
+            'note' => 'Walk-in repair created by ' . auth()->user()->name . '. Awaiting customer email approval.',
             'changed_by' => auth()->id(),
         ]);
 
+        Mail::to($validated['approval_email'])->send(new RepairApprovalOtpMail($repair));
+
         return redirect()->route('admin.repairs.show', $repair)
-            ->with('status', 'Walk-in repair created. Tracking ID: ' . $repair->tracking_id);
+            ->with('status', 'Walk-in repair created. Tracking ID: ' . $repair->tracking_id . '. An approval code has been emailed to the customer.');
+    }
+
+    // Resend the OTP if the customer didn't get it or it expired
+    public function resendOtp(Repair $repair)
+    {
+        abort_unless(auth()->user()->isAdmin(), 403, 'Access denied.');
+        abort_unless($repair->approval_email, 404);
+
+        $repair->update([
+            'otp_code' => (string) random_int(100000, 999999),
+            'otp_expires_at' => now()->addMinutes(15),
+        ]);
+
+        Mail::to($repair->approval_email)->send(new RepairApprovalOtpMail($repair));
+
+        return back()->with('status', 'Approval code resent to ' . $repair->approval_email);
     }
 }

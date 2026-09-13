@@ -48,27 +48,212 @@ img {
     height: auto;
 }
 
-/* ---------------- Navbar ---------------- */
+/* ---------------- Navbar: premium, minimal, icon-based ---------------- */
 .site-navbar {
-    background: linear-gradient(90deg, #FFFFFF 0%, #F3F8FB 55%, #FDF6EF 100%);
+    background: #FFFFFF;
     border-bottom: 1px solid var(--color-border);
+    box-shadow: 0 1px 8px rgba(27, 32, 39, 0.03);
+    position: sticky;
+    top: 0;
+    z-index: 1030;
 }
 
-.site-navbar .brand {
+.nav-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    height: 74px;
+    padding: 0 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+/* Logo: untouched, own proportions, vertically centered */
+.nav-logo {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.nav-logo img {
+    height: 52px;
+    width: auto;
+    max-width: 210px;
+    object-fit: contain;
+    display: block;
+}
+
+.nav-logo-fallback {
     font-family: var(--font-display);
     font-weight: 600;
+    font-size: 1.1rem;
     color: var(--color-text);
-    font-size: 1.15rem;
+    white-space: nowrap;
 }
 
-.site-navbar .nav-link {
-    color: var(--color-text-muted);
+/* Center nav links */
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 2.25rem;
+    flex: 1;
+    justify-content: center;
 }
 
-.site-navbar .nav-link:hover {
-    color: var(--color-text);
+.nav-link-item {
+    position: relative;
+    color: #1B2027;
+    font-weight: 500;
+    font-size: 0.95rem;
+    text-decoration: none;
+    padding: 0.4rem 0.1rem;
+    white-space: nowrap;
+    transition: color 0.25s ease;
 }
 
+.nav-link-item::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -2px;
+    height: 2px;
+    background: var(--color-accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.25s ease;
+}
+
+.nav-link-item:hover {
+    color: var(--color-accent);
+}
+
+.nav-link-item:hover::after {
+    transform: scaleX(1);
+}
+
+.nav-link-item.active {
+    color: var(--color-accent);
+    font-weight: 600;
+}
+
+.nav-link-item.active::after {
+    transform: scaleX(1);
+}
+
+/* Right-side icons */
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+.nav-icon-btn {
+    background: transparent;
+    border: none;
+    color: #1B2027;
+    font-size: 1.2rem;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.nav-icon-btn:hover,
+.nav-icon-btn:focus {
+    background: var(--color-bg-panel-alt);
+    color: var(--color-accent);
+}
+
+.cart-count-badge {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background: var(--color-accent);
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 700;
+    min-width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 3px;
+}
+
+.nav-hamburger {
+    background: transparent;
+    border: 1px solid var(--color-border);
+    color: #1B2027;
+    font-size: 1.3rem;
+    width: 42px;
+    height: 42px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.site-navbar .dropdown-menu {
+    border: 1px solid var(--color-border);
+    box-shadow: 0 8px 24px rgba(27, 32, 39, 0.08);
+    margin-top: 0.5rem;
+}
+
+.site-navbar .dropdown-item:active {
+    background: var(--color-accent);
+}
+
+/* Mobile menu panel */
+.nav-links-mobile {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem 1.5rem 1.25rem;
+    border-top: 1px solid var(--color-border);
+}
+
+.nav-links-mobile .nav-link-item {
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--color-border);
+    width: 100%;
+}
+
+.nav-links-mobile .nav-link-item:last-child {
+    border-bottom: none;
+}
+
+.nav-links-mobile .nav-link-item::after {
+    display: none;
+}
+
+@media (max-width: 991px) {
+    .nav-inner {
+        height: 64px;
+        padding: 0 1rem;
+    }
+    .nav-logo img {
+        height: 42px;
+        max-width: 170px;
+    }
+}
+
+@media (max-width: 400px) {
+    .nav-logo img {
+        height: 36px;
+        max-width: 140px;
+    }
+    .nav-icon-btn,
+    .nav-hamburger {
+        width: 38px;
+        height: 38px;
+    }
+}
 /* ---------------- Buttons ---------------- */
 .btn-accent {
     background: var(--color-accent);
@@ -262,137 +447,6 @@ img {
     font-size: 0.9rem;
 }
 
-/* ==========================================================================
-   Responsive — covers desktop, laptop, tablet, and phone screens
-   ========================================================================== */
-
-/* Large desktops (>1400px): cap hero heading size so it doesn't look oversized */
-@media (min-width: 1400px) {
-    .hero h1 {
-        font-size: 3.25rem;
-    }
-}
-
-/* Laptops / small desktops */
-@media (max-width: 1199px) {
-    .hero h1 {
-        font-size: 2.6rem;
-    }
-}
-
-/* Tablets */
-@media (max-width: 991px) {
-    .hero {
-        padding: 4.5rem 0 3.5rem;
-        text-align: center;
-    }
-    .hero .lead {
-        margin-left: auto;
-        margin-right: auto;
-    }
-    .hero h1 {
-        max-width: 100%;
-        margin-left: auto;
-        margin-right: auto;
-        font-size: 2.3rem;
-    }
-    .hero .d-flex {
-        justify-content: center;
-    }
-    .ticket-card {
-        margin: 3rem auto 0;
-        max-width: 420px;
-    }
-    .service-card-img {
-        aspect-ratio: 16 / 9;
-    }
-}
-
-/* Large phones / small tablets */
-@media (max-width: 767px) {
-    .site-navbar .navbar-brand {
-        font-size: 1rem;
-    }
-    .hero {
-        padding: 3.5rem 0 3rem;
-    }
-    .hero h1 {
-        font-size: 2rem;
-    }
-    .hero p.lead {
-        font-size: 1rem;
-    }
-    section.py-5 {
-        padding-top: 3rem !important;
-        padding-bottom: 3rem !important;
-    }
-}
-
-/* Phones */
-@media (max-width: 576px) {
-    .container {
-        padding-left: 1rem;
-        padding-right: 1rem;
-    }
-    .hero {
-        padding: 3rem 0 2.5rem;
-    }
-    .hero h1 {
-        font-size: 1.75rem;
-    }
-    .hero p.lead {
-        font-size: 0.95rem;
-    }
-    .hero .d-flex {
-        flex-direction: column;
-        gap: 0.75rem !important;
-    }
-    .hero .d-flex .btn {
-        width: 100%;
-    }
-    .ticket-card {
-        max-width: 100%;
-        padding: 1.25rem;
-    }
-    .service-card {
-        padding: 1.5rem 1.25rem;
-    }
-    .service-card-body {
-        padding: 1.25rem;
-    }
-    .ticket-row {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.25rem;
-    }
-    .ticket-row span:last-child {
-        text-align: left;
-    }
-    .cta-band .d-flex {
-        text-align: center;
-    }
-    .cta-band .d-flex.gap-3 {
-        flex-direction: column;
-        width: 100%;
-    }
-    .cta-band .btn {
-        width: 100%;
-    }
-    .site-footer .row > div {
-        margin-bottom: 0.5rem;
-    }
-}
-
-/* Very small phones */
-@media (max-width: 375px) {
-    .hero h1 {
-        font-size: 1.5rem;
-    }
-    .navbar-brand {
-        font-size: 0.9rem;
-    }
-}
-
 /* ---------------- Equal-size product cards (shop + home) ---------------- */
 .product-card {
     display: flex;
@@ -480,10 +534,209 @@ img {
 
 .product-card-actions .btn {
     width: 100%;
+    min-height: 34px;
     font-size: 0.78rem;
     padding: 0.4rem 0.4rem;
+    line-height: 1.1;
+    white-space: normal;
+    word-break: break-word;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.3rem;
+}
+
+/* ---------------- Cart count badge (on the navbar cart icon) ---------------- */
+.cart-count-badge {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background: var(--color-accent);
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 700;
+    min-width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 3px;
+}
+
+/* Prevent any Bootstrap Icons glyph from rendering oversized outside a
+   sized button/badge context. */
+.bi {
+    vertical-align: -0.125em;
+}
+
+/* Pagination: keep it compact and never let icons/arrows render oversized */
+.pagination {
+    flex-wrap: wrap;
+    gap: 0.25rem;
+}
+
+.pagination .page-link {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.7rem;
+}
+
+.pagination svg {
+    width: 1em;
+    height: 1em;
+}
+
+/* ==========================================================================
+   Responsive — covers desktop, laptop, tablet, and phone screens
+   ========================================================================== */
+
+/* Large desktops (>1400px): cap hero heading size so it doesn't look oversized */
+@media (min-width: 1400px) {
+    .hero h1 {
+        font-size: 3.25rem;
+    }
+}
+
+/* Laptops / small desktops */
+@media (max-width: 1199px) {
+    .hero h1 {
+        font-size: 2.6rem;
+    }
+}
+
+/* Tablets */
+@media (max-width: 991px) {
+    .hero {
+        padding: 4.5rem 0 3.5rem;
+        text-align: center;
+    }
+    .hero .lead {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .hero h1 {
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+        font-size: 2.3rem;
+    }
+    .hero .d-flex {
+        justify-content: center;
+    }
+    .ticket-card {
+        margin: 3rem auto 0;
+        max-width: 420px;
+    }
+    .service-card-img {
+        aspect-ratio: 16 / 9;
+    }
+    .site-navbar .navbar-brand img {
+        height: 46px;
+        max-width: 190px;
+    }
+    .site-navbar .navbar-nav {
+        padding: 0.75rem 0;
+        border-top: 1px solid var(--color-border);
+        margin-top: 0.5rem;
+    }
+    .site-navbar .nav-link {
+        padding: 0.6rem 0.25rem;
+    }
+}
+
+/* Large phones / small tablets */
+@media (max-width: 767px) {
+    .hero {
+        padding: 3.5rem 0 3rem;
+    }
+    .hero h1 {
+        font-size: 2rem;
+    }
+    .hero p.lead {
+        font-size: 1rem;
+    }
+    section.py-5 {
+        padding-top: 3rem !important;
+        padding-bottom: 3rem !important;
+    }
+}
+
+/* Phones */
+@media (max-width: 576px) {
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    .hero {
+        padding: 3rem 0 2.5rem;
+    }
+    .hero h1 {
+        font-size: 1.75rem;
+    }
+    .hero p.lead {
+        font-size: 0.95rem;
+    }
+    .hero .d-flex {
+        flex-direction: column;
+        gap: 0.75rem !important;
+    }
+    .hero .d-flex .btn {
+        width: 100%;
+    }
+    .ticket-card {
+        max-width: 100%;
+        padding: 1.25rem;
+    }
+    .service-card {
+        padding: 1.5rem 1.25rem;
+    }
+    .service-card-body {
+        padding: 1.25rem;
+    }
+    .ticket-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+    .ticket-row span:last-child {
+        text-align: left;
+    }
+    .cta-band .d-flex {
+        text-align: center;
+    }
+    .cta-band .d-flex.gap-3 {
+        flex-direction: column;
+        width: 100%;
+    }
+    .cta-band .btn {
+        width: 100%;
+    }
+    .site-footer .row > div {
+        margin-bottom: 0.5rem;
+    }
+    .site-navbar .navbar-brand img {
+        height: 40px;
+        max-width: 160px;
+    }
+    .nav-icon-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 1.1rem;
+    }
+}
+
+/* Very small phones */
+@media (max-width: 375px) {
+    .hero h1 {
+        font-size: 1.5rem;
+    }
+    .site-navbar .navbar-brand img {
+        height: 34px;
+        max-width: 130px;
+    }
+    .nav-icon-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 1rem;
+    }
 }

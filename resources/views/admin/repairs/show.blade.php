@@ -23,6 +23,31 @@
                     <span>Technician</span>
                     <span>{{ $repair->technician->name ?? 'Not assigned' }}</span>
                 </div>
+
+                @if ($repair->needsApproval())
+                    <div class="ticket-row">
+                        <span>Customer Approval</span>
+                        <span>
+                            @if ($repair->isApproved())
+                                <span class="ticket-status">Approved ({{ $repair->approved_at->format('d M, h:i A') }})</span>
+                            @else
+                                <span class="badge bg-secondary">Awaiting Approval</span>
+                            @endif
+                        </span>
+                    </div>
+                    @unless ($repair->isApproved())
+                        <div class="ticket-row">
+                            <span>Approval Email</span>
+                            <span>
+                                {{ $repair->approval_email }}
+                                <form method="POST" action="{{ route('admin.repairs.resend-otp', $repair) }}" class="d-inline">
+                                    @csrf
+                                    <button type="submit" class="btn btn-outline-soft btn-sm ms-2">Resend Code</button>
+                                </form>
+                            </span>
+                        </div>
+                    @endunless
+                @endif
             </div>
 
             <div class="service-card">

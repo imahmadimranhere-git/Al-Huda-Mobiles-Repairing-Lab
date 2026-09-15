@@ -13,7 +13,7 @@ class WebsiteContentController extends Controller
     {
         abort_unless(auth()->user()->isAdmin(), 403, 'Access denied.');
 
-        $settings = [
+                $settings = [
             'site_logo' => SiteSetting::get('site_logo'),
             'hero_eyebrow' => SiteSetting::get('hero_eyebrow'),
             'hero_heading' => SiteSetting::get('hero_heading'),
@@ -24,6 +24,8 @@ class WebsiteContentController extends Controller
             'contact_whatsapp' => SiteSetting::get('contact_whatsapp'),
             'contact_email' => SiteSetting::get('contact_email'),
             'contact_address' => SiteSetting::get('contact_address'),
+            'admin_whatsapp_number' => SiteSetting::get('admin_whatsapp_number'),
+            'delivery_disclaimer' => SiteSetting::get('delivery_disclaimer'),
         ];
 
         return view('admin.website.home', ['settings' => $settings]);
@@ -44,6 +46,8 @@ class WebsiteContentController extends Controller
             'contact_whatsapp' => ['nullable', 'string', 'max:30'],
             'contact_email' => ['nullable', 'email', 'max:255'],
             'contact_address' => ['nullable', 'string', 'max:255'],
+            'admin_whatsapp_number' => ['nullable', 'string', 'max:20'],
+            'delivery_disclaimer' => ['nullable', 'string', 'max:2000'],
         ]);
 
         // Logo is handled separately since it's a file, not a plain text value

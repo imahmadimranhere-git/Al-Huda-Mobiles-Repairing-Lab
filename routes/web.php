@@ -21,6 +21,7 @@ use App\Http\Controllers\Public\NewsController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\RepairApprovalController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RepairDeliveryController;
 
 // Home page
 Route::get('/', [\App\Http\Controllers\Public\HomeController::class, 'index'])->name('home');
@@ -36,7 +37,7 @@ Route::post('repairs/approve/{trackingId}', [RepairApprovalController::class, 'v
 
 // Direct tracking view by ID (used after approval, and by QR code)
 Route::get('track/{trackingId}', [RepairController::class, 'trackDirect'])->name('repairs.track.result.direct');
-
+Route::post('repairs/{trackingId}/confirm-delivery', [RepairDeliveryController::class, 'store'])->name('repairs.confirm-delivery');
 Route::get('news-updates', [NewsController::class, 'index'])->name('news.index');
 
 // Guest-only routes (login/register)

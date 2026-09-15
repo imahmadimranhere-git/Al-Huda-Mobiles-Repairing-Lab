@@ -16,13 +16,38 @@
         <div class="col-lg-7">
             <div class="service-card mb-4">
                 <h5 class="mb-3">Repair Details</h5>
-                <div class="ticket-row"><span>Customer</span><span>{{ $repair->user->name }}</span></div>
+                                <div class="ticket-row"><span>Customer</span><span>{{ $repair->customer_name ?? $repair->user->name }}</span></div>
+                <div class="ticket-row"><span>Phone</span><span>{{ $repair->customer_phone ?? $repair->user->phone ?? '—' }}</span></div>
+                @if ($repair->delivery_method)
+                    <div class="ticket-row"><span>Delivery</span><span>{{ $repair->deliveryMethodLabel() }}</span></div>
+                @endif
                 <div class="ticket-row"><span>Device</span><span>{{ $repair->device_brand }} {{ $repair->device_model }}</span></div>
-                <div class="ticket-row"><span>Issue</span><span>{{ $repair->issue }}</span></div>
+                                <div class="ticket-row"><span>Issue</span><span>{{ $repair->issue }}</span></div>
+                @if ($repair->device_photo)
+                    <div class="mt-2 mb-2">
+                        <span class="text-secondary small d-block mb-1">Device Photo (submitted by customer)</span>
+                        <img src="{{ asset('storage/' . $repair->device_photo) }}" alt="Device photo" class="img-fluid rounded" style="max-height: 220px;">
+                    </div>
+                @endif
                 <div class="ticket-row">
                     <span>Technician</span>
                     <span>{{ $repair->technician->name ?? 'Not assigned' }}</span>
                 </div>
+
+                @if ($repair->status === 'completed' && $repair->user->phone)
+                    @php
+                        $customerMessage = "Hi {$repair->user->name}, your repair (Tracking ID: {$repair->tracking_id}) is completed and ready for pickup at Al Huda Mobiles Repairing Lab.";
+                        $customerWhatsapp = 'https://wa.me/' . preg_replace('/[^0-9]/', '', $repair->user->phone) . '?text=' . urlencode($customerMessage);
+                    @endphp
+                    <div class="ticket-row">
+                        <span>Notify Customer</span>
+                        <span>
+                            <a href="{{ $customerWhatsapp }}" target="_blank" class="btn btn-accent btn-sm">
+                                <i class="bi bi-whatsapp"></i> Send WhatsApp
+                            </a>
+                        </span>
+                    </div>
+                @endif
 
                 @if ($repair->needsApproval())
                     <div class="ticket-row">
@@ -106,7 +131,7 @@
         </div>
 
         <div class="col-lg-5">
-            <div class="service-card">
+            <div class="service-card mb-4">
                 <h5 class="mb-3">Status Timeline</h5>
                 @forelse ($repair->statusHistories->sortByDesc('created_at') as $history)
                     <div class="ticket-row">
@@ -117,6 +142,17 @@
                     <p class="text-secondary mb-0">No updates yet.</p>
                 @endforelse
             </div>
+
+            @if ($repair->delivery)
+                <div class="service-card">
+                    <h5 class="mb-3">Delivery Confirmation</h5>
+                    <p class="text-secondary small mb-2">
+                        Confirmed by customer on {{ $repair->delivery->created_at->format('d M Y, h:i A') }}
+                    </p>
+                    <img src="{{ asset('storage/' . $repair->delivery->photo) }}" alt="Delivery photo" class="img-fluid rounded">
+                </div>
+            @endif
         </div>
+
     </div>
 @endsection

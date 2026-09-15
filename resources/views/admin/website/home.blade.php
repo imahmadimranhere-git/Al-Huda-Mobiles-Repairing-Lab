@@ -17,7 +17,7 @@
         </div>
     @endif
 
-        <form method="POST" action="{{ route('admin.website.home.update') }}" enctype="multipart/form-data">
+    <form method="POST" action="{{ route('admin.website.home.update') }}" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
@@ -85,6 +85,22 @@
                     <label class="form-label">Address</label>
                     <input type="text" name="contact_address" class="form-control" value="{{ old('contact_address', $settings['contact_address']) }}">
                 </div>
+            </div>
+        </div>
+
+        <div class="service-card mb-4">
+            <h5 class="mb-3">Delivery Confirmation & Notifications</h5>
+
+            <div class="mb-3">
+                <label class="form-label">Admin WhatsApp Number (with country code, no + or spaces)</label>
+                <input type="text" name="admin_whatsapp_number" class="form-control"
+                       value="{{ old('admin_whatsapp_number', $settings['admin_whatsapp_number']) }}" placeholder="923001234567">
+                <div class="form-text">Customers' "device received" WhatsApp messages will be pre-filled to this number.</div>
+            </div>
+
+            <div class="mb-0">
+                <label class="form-label">Liability Disclaimer (shown as a checkbox on Track Repair)</label>
+                <textarea name="delivery_disclaimer" class="form-control" rows="4">{{ old('delivery_disclaimer', $settings['delivery_disclaimer']) }}</textarea>
             </div>
         </div>
 

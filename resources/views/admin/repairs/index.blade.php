@@ -56,7 +56,7 @@
                 @forelse ($repairs as $repair)
                     <tr>
                         <td class="ps-4">{{ $repair->tracking_id }}</td>
-                        <td>{{ $repair->user->name }}</td>
+                        <td>{{ $repair->customer_name ?? $repair->user->name }}<td>
                         <td>{{ $repair->device_brand }} {{ $repair->device_model }}</td>
                         <td>{{ $repair->technician->name ?? '—' }}</td>
                         <td>

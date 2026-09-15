@@ -18,6 +18,14 @@
                         <span class="ticket-status">{{ ucfirst($repair->status) }}</span>
 
                         <div class="ticket-row">
+                            <span>Name</span>
+                            <span>{{ $repair->customer_name }}</span>
+                        </div>
+                        <div class="ticket-row">
+                            <span>Phone</span>
+                            <span>{{ $repair->customer_phone }}</span>
+                        </div>
+                        <div class="ticket-row">
                             <span>Device</span>
                             <span>{{ $repair->device_brand }} {{ $repair->device_model }}</span>
                         </div>
@@ -25,9 +33,22 @@
                             <span>Issue</span>
                             <span>{{ $repair->issue }}</span>
                         </div>
+                        <div class="ticket-row">
+                            <span>Delivery</span>
+                            <span>{{ $repair->deliveryMethodLabel() }}</span>
+                        </div>
                     </div>
 
-                    <a href="{{ route('home') }}" class="btn btn-outline-soft mt-4">Back to Home</a>
+                    @if (session('whatsapp_url'))
+                        <a href="{{ session('whatsapp_url') }}" target="_blank" class="btn btn-accent mt-4">
+                            <i class="bi bi-whatsapp"></i> Notify Shop on WhatsApp
+                        </a>
+                        <p class="text-secondary small mt-2">Tap the button above to let us know instantly.</p>
+                    @endif
+
+                    <div>
+                        <a href="{{ route('home') }}" class="btn btn-outline-soft mt-3">Back to Home</a>
+                    </div>
                 </div>
             </div>
         </div>

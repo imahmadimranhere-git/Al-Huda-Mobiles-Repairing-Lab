@@ -22,6 +22,7 @@ use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\RepairApprovalController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RepairDeliveryController;
+use App\Http\Controllers\Admin\ReportController;
 
 // Home page
 Route::get('/', [\App\Http\Controllers\Public\HomeController::class, 'index'])->name('home');
@@ -145,6 +146,9 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
     Route::post('repairs/{repair}/resend-otp', [AdminRepairController::class, 'resendOtp'])->name('repairs.resend-otp');
 
+        // Reports
+    Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::get('reports/pdf', [ReportController::class, 'pdf'])->name('reports.pdf');
 
 
     

@@ -95,7 +95,14 @@
                         <i class="bi bi-receipt"></i> Orders
                     </a>
                 </li>
-                {{-- Products, Orders links will be added as the shop module is built --}}
+
+                                <li class="nav-item">
+                    <a class="admin-nav-link {{ request()->routeIs('admin.reports.*') ? 'active' : '' }}"
+                       href="{{ route('admin.reports.index') }}">
+                        <i class="bi bi-graph-up"></i> Reports
+                    </a>
+                </li>
+                
             </ul>
         </nav>
 

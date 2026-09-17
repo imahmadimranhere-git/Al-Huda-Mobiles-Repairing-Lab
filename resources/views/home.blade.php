@@ -4,7 +4,9 @@
 
 @section('content')
 
-    <section class="hero">
+@include('partials.banner-slider')
+
+        <section class="hero">
         <div class="container">
             <div class="row align-items-center gy-5">
                 <div class="col-lg-6 text-center text-lg-start">
@@ -20,32 +22,40 @@
                 </div>
 
                 <div class="col-lg-6">
-                    <div class="ticket-card">
-                        <div class="d-flex justify-content-between align-items-start">
-                            <div>
-                                <div class="ticket-id">AHMR-20260905-0124</div>
-                                <span class="ticket-status">Repairing</span>
+                    @if ($settings['hero_video_url'])
+                        <div class="hero-video-wrap">
+                            <video autoplay muted loop playsinline>
+                                <source src="{{ asset('storage/' . $settings['hero_video_url']) }}" type="video/mp4">
+                            </video>
+                        </div>
+                    @else
+                        <div class="ticket-card">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <div class="ticket-id">AHMR-20260905-0124</div>
+                                    <span class="ticket-status">Repairing</span>
+                                </div>
+                                <i class="bi bi-qr-code fs-3 text-secondary"></i>
                             </div>
-                            <i class="bi bi-qr-code fs-3 text-secondary"></i>
-                        </div>
 
-                        <div class="ticket-row">
-                            <span>Device</span>
-                            <span>iPhone 13 Pro</span>
+                            <div class="ticket-row">
+                                <span>Device</span>
+                                <span>iPhone 13 Pro</span>
+                            </div>
+                            <div class="ticket-row">
+                                <span>Issue</span>
+                                <span>No display, charging normally</span>
+                            </div>
+                            <div class="ticket-row">
+                                <span>Technician</span>
+                                <span>Bilal A.</span>
+                            </div>
+                            <div class="ticket-row">
+                                <span>Est. completion</span>
+                                <span>Today, 6:00 PM</span>
+                            </div>
                         </div>
-                        <div class="ticket-row">
-                            <span>Issue</span>
-                            <span>No display, charging normally</span>
-                        </div>
-                        <div class="ticket-row">
-                            <span>Technician</span>
-                            <span>Bilal A.</span>
-                        </div>
-                        <div class="ticket-row">
-                            <span>Est. completion</span>
-                            <span>Today, 6:00 PM</span>
-                        </div>
-                    </div>
+                    @endif
                 </div>
             </div>
         </div>

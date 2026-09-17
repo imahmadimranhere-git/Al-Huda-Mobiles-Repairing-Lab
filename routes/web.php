@@ -23,6 +23,8 @@ use App\Http\Controllers\RepairApprovalController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RepairDeliveryController;
 use App\Http\Controllers\Admin\ReportController;
+use App\Http\Controllers\Admin\AnnouncementTickerController;
+use App\Http\Controllers\Admin\BannerController;
 
 // Home page
 Route::get('/', [\App\Http\Controllers\Public\HomeController::class, 'index'])->name('home');
@@ -150,6 +152,21 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
     Route::get('reports/pdf', [ReportController::class, 'pdf'])->name('reports.pdf');
 
+        // Announcement Ticker
+    Route::get('tickers', [AnnouncementTickerController::class, 'index'])->name('tickers.index');
+    Route::get('tickers/create', [AnnouncementTickerController::class, 'create'])->name('tickers.create');
+    Route::post('tickers', [AnnouncementTickerController::class, 'store'])->name('tickers.store');
+    Route::get('tickers/{ticker}/edit', [AnnouncementTickerController::class, 'edit'])->name('tickers.edit');
+    Route::put('tickers/{ticker}', [AnnouncementTickerController::class, 'update'])->name('tickers.update');
+    Route::delete('tickers/{ticker}', [AnnouncementTickerController::class, 'destroy'])->name('tickers.destroy');
+
+    // Banners
+    Route::get('banners', [BannerController::class, 'index'])->name('banners.index');
+    Route::get('banners/create', [BannerController::class, 'create'])->name('banners.create');
+    Route::post('banners', [BannerController::class, 'store'])->name('banners.store');
+    Route::get('banners/{banner}/edit', [BannerController::class, 'edit'])->name('banners.edit');
+    Route::put('banners/{banner}', [BannerController::class, 'update'])->name('banners.update');
+    Route::delete('banners/{banner}', [BannerController::class, 'destroy'])->name('banners.destroy');
 
     
     });

@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 
 class ShopController extends Controller
 {
-    // List all active products, with category filter and search
     public function index(Request $request)
     {
         $query = Product::where('is_active', true)->with('category');
@@ -21,13 +20,49 @@ class ShopController extends Controller
             $query->where('name', 'like', '%' . $request->search . '%');
         }
 
-        $products = $query->latest()->paginate(9)->withQueryString();
+        if ($request->filled('min_price')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('sale_price', '>=', $request->min_price)
+                  ->orWhere(function ($q2) use ($request) {
+                      $q2->whereNull('sale_price')->where('price', '>=', $request->min_price);
+                  });
+            });
+        }
+
+        if ($request->filled('max_price')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('sale_price', '<=', $request->max_price)
+                  ->orWhere(function ($q2) use ($request) {
+                      $q2->whereNull('sale_price')->where('price', '<=', $request->max_price);
+                  });
+            });
+        }
+
+        if ($request->filled('in_stock')) {
+            $query->where('stock', '>', 0);
+        }
+
+        $sort = $request->get('sort', 'latest');
+        match ($sort) {
+            'price_low' => $query->orderByRaw('COALESCE(sale_price, price) asc'),
+            'price_high' => $query->orderByRaw('COALESCE(sale_price, price) desc'),
+            default => $query->latest(),
+        };
+
+        $products = $query->paginate(9)->withQueryString();
         $categories = Category::where('is_active', true)->orderBy('name')->get();
 
-        return view('shop.index', ['products' => $products, 'categories' => $categories]);
+        $priceBounds = Product::where('is_active', true)
+            ->selectRaw('MIN(COALESCE(sale_price, price)) as min_price, MAX(COALESCE(sale_price, price)) as max_price')
+            ->first();
+
+        return view('shop.index', [
+            'products' => $products,
+            'categories' => $categories,
+            'priceBounds' => $priceBounds,
+        ]);
     }
 
-    // Show a single product's details
     public function show(Product $product)
     {
         abort_unless($product->is_active, 404);

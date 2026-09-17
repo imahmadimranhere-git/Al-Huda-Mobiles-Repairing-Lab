@@ -103,6 +103,21 @@
                     </a>
                 </li>
                 
+                                <li class="nav-item">
+                    <a class="admin-nav-link {{ request()->routeIs('admin.tickers.*') ? 'active' : '' }}"
+                       href="{{ route('admin.tickers.index') }}">
+                        <i class="bi bi-megaphone"></i> Announcements
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="admin-nav-link {{ request()->routeIs('admin.banners.*') ? 'active' : '' }}"
+                       href="{{ route('admin.banners.index') }}">
+                        <i class="bi bi-images"></i> Banners
+                    </a>
+                </li>
+
+
+
             </ul>
         </nav>
 

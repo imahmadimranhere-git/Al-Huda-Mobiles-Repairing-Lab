@@ -740,3 +740,107 @@ img {
         font-size: 1rem;
     }
 }
+
+
+/* ---------------- Announcement ticker (scrolling horizontal bar) ---------------- */
+.announcement-ticker {
+    background: var(--color-accent);
+    color: #fff;
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 0.5rem 0;
+}
+
+.announcement-ticker-track {
+    display: inline-flex;
+    animation: ticker-scroll 25s linear infinite;
+}
+
+.announcement-item {
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding: 0 2.5rem;
+    text-decoration: none;
+}
+
+@keyframes ticker-scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+}
+
+/* ---------------- Banner slider (auto-rotating, responsive images) ---------------- */
+.banner-slider {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+}
+
+.banner-slider-track {
+    display: flex;
+    transition: transform 0.6s ease;
+}
+
+.banner-slide {
+    flex: 0 0 100%;
+    width: 100%;
+}
+
+.banner-slide-img,
+.banner-slide picture {
+    width: 100%;
+    display: block;
+}
+
+.banner-slide-img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.banner-slider-dots {
+    position: absolute;
+    bottom: 12px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 0.4rem;
+}
+
+.banner-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.6);
+    border: none;
+    padding: 0;
+}
+
+.banner-dot.active {
+    background: #fff;
+    width: 20px;
+    border-radius: 4px;
+}
+
+/* ---------------- Hero video (replaces the static ticket card) ---------------- */
+.hero-video-wrap {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 12px 30px rgba(27, 32, 39, 0.1);
+}
+
+.hero-video-wrap video {
+    width: 100%;
+    display: block;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+}
+
+/* ---------------- Shop price range filter ---------------- */
+.shop-filter-sidebar {
+    background: var(--color-bg-panel);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 1.5rem;
+}

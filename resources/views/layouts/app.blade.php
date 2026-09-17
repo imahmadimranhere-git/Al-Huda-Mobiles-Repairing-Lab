@@ -94,6 +94,8 @@
         </div>
     </header>
 
+        @include('partials.announcement-ticker', ['tickers' => $tickers ?? collect()])
+
     @if (session('status'))
         <div class="container mt-3">
             <div class="alert alert-success">{{ session('status') }}</div>

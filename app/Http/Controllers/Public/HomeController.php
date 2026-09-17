@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
+use App\Models\AnnouncementTicker;
+use App\Models\Banner;
 use App\Models\Category;
 use App\Models\NewsUpdate;
 use App\Models\Service;
@@ -19,6 +21,7 @@ class HomeController extends Controller
             'hero_description' => SiteSetting::get('hero_description', ''),
             'hero_button_text' => SiteSetting::get('hero_button_text', 'Book a repair'),
             'hero_button_url' => SiteSetting::get('hero_button_url', '/book-repair'),
+            'hero_video_url' => SiteSetting::get('hero_video_url'),
         ];
 
         $services = Service::where('is_active', true)->orderBy('display_order')->get();
@@ -29,9 +32,6 @@ class HomeController extends Controller
             ->take(3)
             ->get();
 
-        // For each active category, pull its 5 most recent active products.
-        // Categories with no active products are skipped so the home page
-        // never shows an empty section.
         $shopCategories = Category::where('is_active', true)
             ->with(['products' => function ($query) {
                 $query->where('is_active', true)->latest()->take(5);
@@ -39,11 +39,16 @@ class HomeController extends Controller
             ->get()
             ->filter(fn ($category) => $category->products->isNotEmpty());
 
+        $tickers = AnnouncementTicker::where('is_active', true)->orderBy('display_order')->get();
+        $banners = Banner::where('is_active', true)->orderBy('display_order')->get();
+
         return view('home', [
             'settings' => $settings,
             'services' => $services,
             'newsItems' => $newsItems,
             'shopCategories' => $shopCategories,
+            'tickers' => $tickers,
+            'banners' => $banners,
         ]);
     }
 }

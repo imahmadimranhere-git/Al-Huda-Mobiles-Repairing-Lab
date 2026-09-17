@@ -34,6 +34,19 @@
         </div>
 
         <div class="service-card mb-4">
+            <h5 class="mb-3">Hero Video</h5>
+
+            @if ($settings['hero_video_url'])
+                <video controls class="mb-3" style="max-height: 150px; display: block;">
+                    <source src="{{ asset('storage/' . $settings['hero_video_url']) }}" type="video/mp4">
+                </video>
+            @endif
+
+            <input type="file" name="hero_video" class="form-control" accept="video/mp4">
+            <div class="form-text">MP4 only, max 20MB. When set, this video replaces the tracking-ticket preview on the home page. Leave blank to keep the current video.</div>
+        </div>
+
+        <div class="service-card mb-4">
             <h5 class="mb-3">Hero Section</h5>
             <div class="mb-3">
                 <label class="form-label">Eyebrow Text (small line above the heading)</label>

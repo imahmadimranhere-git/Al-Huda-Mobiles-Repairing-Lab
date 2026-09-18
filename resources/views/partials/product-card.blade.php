@@ -26,14 +26,14 @@
             <div class="product-card-actions">
                 <form method="POST" action="{{ route('cart.add', $product) }}">
                     @csrf
-                    <button type="submit" class="btn btn-outline-soft btn-sm">
-                        <i class="bi bi-cart-plus"></i> Add to Cart
+                    <button type="submit" class="btn btn-outline-soft btn-sm" aria-label="Add to cart">
+                        <i class="bi bi-cart-plus"></i> Add
                     </button>
                 </form>
                 <form method="POST" action="{{ route('checkout.buy-now', $product) }}">
                     @csrf
-                    <button type="submit" class="btn btn-accent btn-sm">
-                        <i class="bi bi-lightning-charge-fill"></i> Buy Now
+                    <button type="submit" class="btn btn-accent btn-sm" aria-label="Buy now">
+                        <i class="bi bi-lightning-charge-fill"></i> Buy
                     </button>
                 </form>
             </div>

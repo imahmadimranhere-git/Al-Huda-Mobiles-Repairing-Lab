@@ -4,17 +4,16 @@
 
 @section('content')
 
-@include('partials.banner-slider')
+    @include('partials.banner-slider')
 
-        <section class="hero">
+    {{-- HERO --}}
+    <section class="hero">
         <div class="container">
             <div class="row align-items-center gy-5">
                 <div class="col-lg-6 text-center text-lg-start">
                     <p class="eyebrow font-display">{{ $settings['hero_eyebrow'] }}</p>
                     <h1>{{ $settings['hero_heading'] }}</h1>
-                    <p class="lead">
-                        {{ $settings['hero_description'] }}
-                    </p>
+                    <p class="lead">{{ $settings['hero_description'] }}</p>
                     <div class="d-flex gap-3 mt-4 justify-content-center justify-content-lg-start">
                         <a href="{{ $settings['hero_button_url'] }}" class="btn btn-accent">{{ $settings['hero_button_text'] }}</a>
                         <a href="{{ route('repairs.track') }}" class="btn btn-outline-soft">Track my repair</a>
@@ -37,23 +36,10 @@
                                 </div>
                                 <i class="bi bi-qr-code fs-3 text-secondary"></i>
                             </div>
-
-                            <div class="ticket-row">
-                                <span>Device</span>
-                                <span>iPhone 13 Pro</span>
-                            </div>
-                            <div class="ticket-row">
-                                <span>Issue</span>
-                                <span>No display, charging normally</span>
-                            </div>
-                            <div class="ticket-row">
-                                <span>Technician</span>
-                                <span>Bilal A.</span>
-                            </div>
-                            <div class="ticket-row">
-                                <span>Est. completion</span>
-                                <span>Today, 6:00 PM</span>
-                            </div>
+                            <div class="ticket-row"><span>Device</span><span>iPhone 13 Pro</span></div>
+                            <div class="ticket-row"><span>Issue</span><span>No display, charging normally</span></div>
+                            <div class="ticket-row"><span>Technician</span><span>Bilal A.</span></div>
+                            <div class="ticket-row"><span>Est. completion</span><span>Today, 6:00 PM</span></div>
                         </div>
                     @endif
                 </div>
@@ -61,12 +47,13 @@
         </div>
     </section>
 
-    <section class="py-5">
-        <div class="container py-4">
-            <div class="row">
+    {{-- SERVICES --}}
+    <section class="py-5" id="services">
+        <div class="container py-3">
+            <div class="row mb-4">
                 <div class="col-lg-6">
                     <h2 class="mb-3">Our Services</h2>
-                    <p class="text-secondary mb-5">
+                    <p class="text-secondary mb-0">
                         Professional mobile repair services with expert diagnosis, quality parts,
                         and reliable workmanship.
                     </p>
@@ -76,7 +63,7 @@
             <div class="row g-4">
                 @forelse ($services as $service)
                     <div class="col-md-4">
-                        <div class="service-card service-card-image p-0">
+                        <div class="service-card service-card-image">
                             @if ($service->image)
                                 <img src="{{ asset('storage/' . $service->image) }}" alt="{{ $service->title }}" class="service-card-img">
                             @else
@@ -99,9 +86,10 @@
         </div>
     </section>
 
+    {{-- NEWS --}}
     @if ($newsItems->isNotEmpty())
-        <section class="py-5" style="background: var(--color-bg-panel-alt);">
-            <div class="container py-4">
+        <section class="py-5" style="background: var(--bg-soft);">
+            <div class="container py-3">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h2 class="mb-0">News &amp; Updates</h2>
                     <a href="{{ route('news.index') }}" class="btn btn-outline-soft btn-sm">
@@ -124,9 +112,10 @@
         </section>
     @endif
 
+    {{-- SHOP --}}
     @if ($shopCategories->isNotEmpty())
         <section class="py-5">
-            <div class="container py-4">
+            <div class="container py-3">
                 <div class="row mb-4">
                     <div class="col-lg-6">
                         <h2 class="mb-0">Shop</h2>
@@ -143,7 +132,7 @@
                             </a>
                         </div>
 
-                        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-3">
+                        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
                             @foreach ($category->products as $product)
                                 <div class="col">
                                     @include('partials.product-card', ['product' => $product])

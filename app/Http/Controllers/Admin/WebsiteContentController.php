@@ -27,6 +27,9 @@ class WebsiteContentController extends Controller
             'contact_address' => SiteSetting::get('contact_address'),
             'admin_whatsapp_number' => SiteSetting::get('admin_whatsapp_number'),
             'delivery_disclaimer' => SiteSetting::get('delivery_disclaimer'),
+            'social_facebook' => SiteSetting::get('social_facebook'),
+            'social_instagram' => SiteSetting::get('social_instagram'),
+            'social_youtube' => SiteSetting::get('social_youtube'),
         ];
 
         return view('admin.website.home', ['settings' => $settings]);
@@ -50,6 +53,9 @@ class WebsiteContentController extends Controller
             'contact_address' => ['nullable', 'string', 'max:255'],
             'admin_whatsapp_number' => ['nullable', 'string', 'max:20'],
             'delivery_disclaimer' => ['nullable', 'string', 'max:2000'],
+            'social_facebook' => ['nullable', 'string', 'max:255'],
+            'social_instagram' => ['nullable', 'string', 'max:255'],
+            'social_youtube' => ['nullable', 'string', 'max:255'],
         ]);
 
         if ($request->hasFile('logo')) {

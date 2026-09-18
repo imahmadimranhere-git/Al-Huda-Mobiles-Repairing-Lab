@@ -102,6 +102,26 @@
         </div>
 
         <div class="service-card mb-4">
+            <h5 class="mb-3">Social Media Links</h5>
+            <p class="text-secondary small mb-3">Shown as icons in the footer. Leave blank to hide any icon.</p>
+
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label">Facebook URL</label>
+                    <input type="text" name="social_facebook" class="form-control" value="{{ old('social_facebook', $settings['social_facebook']) }}">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Instagram URL</label>
+                    <input type="text" name="social_instagram" class="form-control" value="{{ old('social_instagram', $settings['social_instagram']) }}">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">YouTube URL</label>
+                    <input type="text" name="social_youtube" class="form-control" value="{{ old('social_youtube', $settings['social_youtube']) }}">
+                </div>
+            </div>
+        </div>
+
+        <div class="service-card mb-4">
             <h5 class="mb-3">Delivery Confirmation & Notifications</h5>
 
             <div class="mb-3">
@@ -112,7 +132,7 @@
             </div>
 
             <div class="mb-0">
-                <label class="form-label">Liability Disclaimer (shown as a checkbox on Track Repair)</label>
+                <label class="form-label">Liability Disclaimer (shown as a checkbox on Book Repair)</label>
                 <textarea name="delivery_disclaimer" class="form-control" rows="4">{{ old('delivery_disclaimer', $settings['delivery_disclaimer']) }}</textarea>
             </div>
         </div>

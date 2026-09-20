@@ -18,19 +18,23 @@ use App\Http\Controllers\Admin\CustomerController as AdminCustomerController;
 use App\Http\Controllers\Admin\NewsUpdateController;
 use App\Http\Controllers\Admin\WebsiteContentController;
 use App\Http\Controllers\Public\NewsController;
-use App\Http\Controllers\Admin\ServiceController;
+use App\Http\Controllers\Admin\ServiceController as AdminServiceController;
 use App\Http\Controllers\RepairApprovalController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RepairDeliveryController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\AnnouncementTickerController;
 use App\Http\Controllers\Admin\BannerController;
+use App\Http\Controllers\Public\SearchController;
+use App\Http\Controllers\Public\ServiceController;
 
 // Home page
 Route::get('/', [\App\Http\Controllers\Public\HomeController::class, 'index'])->name('home');
 // Shop — open to everyone
 Route::get('shop', [ShopController::class, 'index'])->name('shop.index');
 Route::get('shop/{product}', [ShopController::class, 'show'])->name('shop.show');
+Route::get('search', [SearchController::class, 'index'])->name('search.index');
+Route::get('services', [ServiceController::class, 'index'])->name('services.index');
 // Track Repair — open to everyone, no login required
 Route::get('track-repair', [RepairController::class, 'trackForm'])->name('repairs.track');
 Route::post('track-repair', [RepairController::class, 'trackResult'])->name('repairs.track.result');
@@ -110,12 +114,12 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
 
         // Services
-    Route::get('services', [ServiceController::class, 'index'])->name('services.index');
-    Route::get('services/create', [ServiceController::class, 'create'])->name('services.create');
-    Route::post('services', [ServiceController::class, 'store'])->name('services.store');
-    Route::get('services/{service}/edit', [ServiceController::class, 'edit'])->name('services.edit');
-    Route::put('services/{service}', [ServiceController::class, 'update'])->name('services.update');
-    Route::delete('services/{service}', [ServiceController::class, 'destroy'])->name('services.destroy');
+    Route::get('services', [AdminServiceController::class, 'index'])->name('services.index');
+    Route::get('services/create', [AdminServiceController::class, 'create'])->name('services.create');
+    Route::post('services', [AdminServiceController::class, 'store'])->name('services.store');
+    Route::get('services/{service}/edit', [AdminServiceController::class, 'edit'])->name('services.edit');
+    Route::put('services/{service}', [AdminServiceController::class, 'update'])->name('services.update');
+    Route::delete('services/{service}', [AdminServiceController::class, 'destroy'])->name('services.destroy');
 
         // News & Updates
     Route::get('news', [NewsUpdateController::class, 'index'])->name('news.index');

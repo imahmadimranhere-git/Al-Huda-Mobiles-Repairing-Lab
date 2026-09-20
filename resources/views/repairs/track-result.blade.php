@@ -6,7 +6,7 @@
     <section class="py-5">
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-lg-7">
+                <div class="col-lg-10">
 
                     @if (session('status'))
                         <div class="alert alert-success">
@@ -28,68 +28,76 @@
                         </div>
                     @endif
 
-                    <div class="ticket-card mb-4" style="margin-left: auto; margin-right: auto; max-width: 100%;">
-                        <div class="d-flex justify-content-between align-items-start">
-                            <div>
-                                <div class="ticket-id fs-5">{{ $repair->tracking_id }}</div>
-                                <span class="ticket-status">{{ ucfirst(str_replace('-', ' ', $repair->status)) }}</span>
-                            </div>
-                            <div class="text-center">
-                                {!! $qrCode !!}
-                                <p class="text-secondary small mb-0">Scan to track</p>
+                    {{-- Ticket card + Status Timeline sit side by side on desktop
+                         (col-lg-6 each) and stack automatically on smaller screens. --}}
+                    <div class="row g-4 align-items-start mb-4">
+                        <div class="col-lg-6">
+                            <div class="ticket-card" style="margin-left: 0; max-width: 100%;">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <div class="ticket-id fs-5">{{ $repair->tracking_id }}</div>
+                                        <span class="ticket-status">{{ ucfirst(str_replace('-', ' ', $repair->status)) }}</span>
+                                    </div>
+                                    <div class="text-center">
+                                        {!! $qrCode !!}
+                                        <p class="text-secondary small mb-0">Scan to track</p>
+                                    </div>
+                                </div>
+
+                                <div class="ticket-row">
+                                    <span>Device</span>
+                                    <span>{{ $repair->device_brand }} {{ $repair->device_model }}</span>
+                                </div>
+                                <div class="ticket-row">
+                                    <span>Issue</span>
+                                    <span>{{ $repair->issue }}</span>
+                                </div>
+                                @if ($repair->diagnosis)
+                                    <div class="ticket-row">
+                                        <span>Diagnosis</span>
+                                        <span>{{ $repair->diagnosis }}</span>
+                                    </div>
+                                @endif
+                                <div class="ticket-row">
+                                    <span>Customer Name</span>
+                                    <span>{{ $repair->customer_name ?? $repair->user->name }}</span>
+                                </div>
+                                <div class="ticket-row">
+                                    <span>Customer Phone</span>
+                                    <span>{{ $repair->customer_phone ?? $repair->user->phone ?? '—' }}</span>
+                                </div>
+                                <div class="ticket-row">
+                                    <span>Technician</span>
+                                    <span>{{ $repair->technician->name ?? 'Not assigned yet' }}</span>
+                                </div>
+                                @if ($repair->estimated_cost)
+                                    <div class="ticket-row">
+                                        <span>Estimated Cost</span>
+                                        <span>Rs. {{ number_format($repair->estimated_cost, 2) }}</span>
+                                    </div>
+                                @endif
+                                @if ($repair->final_cost)
+                                    <div class="ticket-row">
+                                        <span>Final Cost</span>
+                                        <span>Rs. {{ number_format($repair->final_cost, 2) }}</span>
+                                    </div>
+                                @endif
                             </div>
                         </div>
 
-                        <div class="ticket-row">
-                            <span>Device</span>
-                            <span>{{ $repair->device_brand }} {{ $repair->device_model }}</span>
-                        </div>
-                        <div class="ticket-row">
-                            <span>Issue</span>
-                            <span>{{ $repair->issue }}</span>
-                        </div>
-                        @if ($repair->diagnosis)
-                            <div class="ticket-row">
-                                <span>Diagnosis</span>
-                                <span>{{ $repair->diagnosis }}</span>
+                        <div class="col-lg-6">
+                            <h5 class="font-display mb-3">Status Timeline</h5>
+                            <div class="service-card">
+                                @forelse ($repair->statusHistories->sortByDesc('created_at') as $history)
+                                    <div class="ticket-row">
+                                        <span>{{ ucfirst(str_replace('-', ' ', $history->new_status)) }}</span>
+                                        <span>{{ $history->created_at->format('d M Y, h:i A') }}</span>
+                                    </div>
+                                @empty
+                                    <p class="text-secondary mb-0">No status updates yet.</p>
+                                @endforelse
                             </div>
-                        @endif
-                        <div class="ticket-row">
-                            <span>Customer Name</span>
-                            <span>{{ $repair->customer_name ?? $repair->user->name }}</span>
                         </div>
-                        <div class="ticket-row">
-                            <span>Customer Phone</span>
-                            <span>{{ $repair->customer_phone ?? $repair->user->phone ?? '—' }}</span>
-                        </div>
-                        <div class="ticket-row">
-                            <span>Technician</span>
-                            <span>{{ $repair->technician->name ?? 'Not assigned yet' }}</span>
-                        </div>
-                        @if ($repair->estimated_cost)
-                            <div class="ticket-row">
-                                <span>Estimated Cost</span>
-                                <span>Rs. {{ number_format($repair->estimated_cost, 2) }}</span>
-                            </div>
-                        @endif
-                        @if ($repair->final_cost)
-                            <div class="ticket-row">
-                                <span>Final Cost</span>
-                                <span>Rs. {{ number_format($repair->final_cost, 2) }}</span>
-                            </div>
-                        @endif
-                    </div>
-
-                    <h5 class="font-display mb-3">Status Timeline</h5>
-                    <div class="service-card mb-4">
-                        @forelse ($repair->statusHistories->sortByDesc('created_at') as $history)
-                            <div class="ticket-row">
-                                <span>{{ ucfirst(str_replace('-', ' ', $history->new_status)) }}</span>
-                                <span>{{ $history->created_at->format('d M Y, h:i A') }}</span>
-                            </div>
-                        @empty
-                            <p class="text-secondary mb-0">No status updates yet.</p>
-                        @endforelse
                     </div>
 
                     @if (in_array($repair->status, ['ready-for-pickup', 'completed']))

@@ -75,7 +75,10 @@ img { max-width: 100%; height: auto; }
     max-width: 1320px;
     width: calc(100% - 24px);
     margin: 12px auto 0;
-    overflow: hidden;
+    /* overflow was "hidden" before — that clipped the account/login dropdown
+       menu inside this rounded box, making it render squashed over the
+       search bar instead of floating freely below the icon. */
+    overflow: visible;
 }
 
 .site-navbar.scrolled {
@@ -305,6 +308,9 @@ img { max-width: 100%; height: auto; }
     margin-top: 0.9rem;
     padding: 0.4rem;
     min-width: 210px;
+    /* Ensure the dropdown always floats above the search row and any
+       other navbar content now that clipping is disabled. */
+    z-index: 1055;
 }
 
 .site-navbar .dropdown-item {
@@ -331,6 +337,10 @@ img { max-width: 100%; height: auto; }
     padding: 0.5rem 0.75rem 0.75rem;
     border-top: 1px solid var(--border);
     background: #FFFFFF;
+    /* Since .site-navbar is no longer clipping overflow, this last row
+       needs its own rounded bottom corners to match the pill shape. */
+    border-bottom-left-radius: 22px;
+    border-bottom-right-radius: 22px;
 }
 
 .nav-search-form {
@@ -1215,7 +1225,11 @@ img { max-width: 100%; height: auto; }
     .nav-icon-btn,
     .nav-hamburger { width: 38px; height: 38px; font-size: 1.05rem; }
 
-    .nav-search-row { padding: 0.5rem 0.7rem 0.7rem; }
+    .nav-search-row {
+        padding: 0.5rem 0.7rem 0.7rem;
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+    }
     .nav-search-form { padding: 0.3rem 0.3rem 0.3rem 0.9rem; }
     .nav-search-form input { font-size: 0.86rem; padding: 0.5rem 0; }
     .nav-search-form button { padding: 0.45rem 0.9rem; font-size: 0.78rem; height: 34px; }
@@ -1297,7 +1311,11 @@ img { max-width: 100%; height: auto; }
         font-size: 0.55rem;
     }
 
-    .nav-search-row { padding: 0.4rem 0.55rem 0.6rem; }
+    .nav-search-row {
+        padding: 0.4rem 0.55rem 0.6rem;
+        border-bottom-left-radius: 18px;
+        border-bottom-right-radius: 18px;
+    }
     .nav-search-form { padding: 0.25rem 0.25rem 0.25rem 0.8rem; }
     .nav-search-form input { font-size: 0.84rem; padding: 0.45rem 0; }
     .nav-search-form > i { font-size: 0.88rem; margin-right: 0.5rem; }
@@ -1364,4 +1382,18 @@ img { max-width: 100%; height: auto; }
     .nav-hamburger { width: 34px; height: 34px; font-size: 0.95rem; }
     .nav-search-row { padding: 0.35rem 0.5rem 0.55rem; }
     .hero h1 { font-size: 1.4rem; }
+}
+
+/* ---------------- Footer spacing fix (adds breathing room before the
+   footer on short pages, without stretching the whole page to fill
+   the viewport height) ---------------- */
+main {
+    display: block;
+    padding-bottom: 3rem;
+}
+
+@media (max-width: 576px) {
+    main {
+        padding-bottom: 2rem;
+    }
 }

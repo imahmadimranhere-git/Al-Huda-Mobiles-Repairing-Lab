@@ -50,14 +50,19 @@
     {{-- SERVICES --}}
     <section class="py-5" id="services">
         <div class="container py-3">
-            <div class="row mb-4">
-                <div class="col-lg-6">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
                     <h2 class="mb-3">Our Services</h2>
                     <p class="text-secondary mb-0">
                         Professional mobile repair services with expert diagnosis, quality parts,
                         and reliable workmanship.
                     </p>
                 </div>
+                @if ($servicesCount > 3)
+                    <a href="{{ route('services.index') }}" class="btn btn-outline-soft btn-sm text-nowrap">
+                        See More <i class="bi bi-arrow-right"></i>
+                    </a>
+                @endif
             </div>
 
             <div class="row g-4">

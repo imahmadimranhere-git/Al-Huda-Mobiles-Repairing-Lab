@@ -7,6 +7,16 @@
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-6">
+
+                    @php $formLogo = \App\Models\SiteSetting::get('site_logo'); @endphp
+                    <div class="text-center mb-4">
+                        @if ($formLogo)
+                            <img src="{{ asset('storage/' . $formLogo) }}" alt="Al Huda Mobiles Repairing Lab" style="height: 56px; object-fit: contain;">
+                        @else
+                            <h4 class="font-display mb-0"><i class="bi bi-cpu"></i> Al Huda Mobiles Repairing Lab</h4>
+                        @endif
+                    </div>
+
                     <h2 class="mb-2 font-display text-center">Track Your Repair</h2>
                     <p class="text-secondary mb-4 text-center">
                         Enter the tracking ID you received when you booked your repair.

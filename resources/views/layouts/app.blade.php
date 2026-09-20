@@ -53,7 +53,7 @@
                         <i class="bi bi-tools"></i> Our Services
                     </a>
                     <a href="{{ route('news.index') }}" class="nav-link-item {{ request()->routeIs('news.*') ? 'active' : '' }}">
-                        <i class="bi bi-newspaper"></i> News
+                        <i class="bi bi-newspaper"></i> News &amp; Updates
                     </a>
                 </nav>
 
@@ -106,9 +106,10 @@
                 </div>
             </div>
 
-            {{-- Search Row --}}
+            
+                      {{-- Search Row --}}
             <div class="nav-search-row">
-                <form action="{{ route('shop.index') }}" method="GET" class="nav-search-form">
+                <form action="{{ route('search.index') }}" method="GET" class="nav-search-form">
                     <i class="bi bi-search"></i>
                     <input type="text" name="q" placeholder="Search products, repairs…" value="{{ request('q') }}">
                     <button type="submit" aria-label="Search">

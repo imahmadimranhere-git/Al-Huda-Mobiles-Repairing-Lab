@@ -24,7 +24,10 @@ class HomeController extends Controller
             'hero_video_url' => SiteSetting::get('hero_video_url'),
         ];
 
-        $services = Service::where('is_active', true)->orderBy('display_order')->get();
+        // Show only the first 3 on the home page — "See More" links to the
+        // full services page only when there are more than 3 to show.
+        $services = Service::where('is_active', true)->orderBy('display_order')->take(3)->get();
+        $servicesCount = Service::where('is_active', true)->count();
 
         $newsItems = NewsUpdate::where('is_active', true)
             ->orderBy('display_order')
@@ -45,6 +48,7 @@ class HomeController extends Controller
         return view('home', [
             'settings' => $settings,
             'services' => $services,
+            'servicesCount' => $servicesCount,
             'newsItems' => $newsItems,
             'shopCategories' => $shopCategories,
             'tickers' => $tickers,

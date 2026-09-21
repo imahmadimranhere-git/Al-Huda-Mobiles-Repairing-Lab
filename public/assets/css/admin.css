@@ -1,27 +1,22 @@
 /* ==========================================================================
    Admin Panel — Layout Styles
-   (Uses the same color tokens defined in app.css)
+   Uses the same red+white tokens defined in app.css (--red, --bg-page, etc.)
    ========================================================================== */
-
-html, body {
-    height: 100%;
-}
 
 .admin-shell {
     min-height: 100vh;
-    background: linear-gradient(180deg, #EEF3F9 0%, #F8FAFC 40%, #FDF6F0 100%);
+    background: var(--bg-page);
 }
 
-/* Sidebar is fixed to the viewport on ALL screen sizes, so it never
-   scrolls away and never gets pushed around by page content. */
+/* Sidebar is fixed to the viewport on ALL screen sizes */
 .admin-sidebar {
     position: fixed;
     top: 0;
     left: 0;
     width: 250px;
     height: 100vh;
-    background: var(--color-bg-panel);
-    border-right: 1px solid var(--color-border);
+    background: var(--bg-panel);
+    border-right: 1px solid var(--border);
     display: flex;
     flex-direction: column;
     z-index: 1030;
@@ -29,9 +24,17 @@ html, body {
 }
 
 .admin-sidebar-brand {
-    padding: 1.5rem;
-    border-bottom: 1px solid var(--color-border);
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border);
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
+}
+
+.admin-sidebar-brand img {
+    max-height: 44px;
+    width: auto;
+    object-fit: contain;
 }
 
 .admin-sidebar-nav {
@@ -40,18 +43,16 @@ html, body {
     padding: 1rem;
 }
 
-/* User name + Logout, pinned to the bottom of the sidebar no matter
-   how tall the screen is or how much nav content is above it. */
 .admin-sidebar-footer {
     flex-shrink: 0;
     padding: 1rem 1.25rem;
-    border-top: 1px solid var(--color-border);
-    background: var(--color-bg-panel);
+    border-top: 1px solid var(--border);
+    background: var(--bg-panel);
 }
 
 .admin-sidebar-footer .user-name {
     font-size: 0.85rem;
-    color: var(--color-text-muted);
+    color: var(--text-muted);
     margin-bottom: 0.6rem;
     white-space: nowrap;
     overflow: hidden;
@@ -63,25 +64,24 @@ html, body {
     align-items: center;
     gap: 0.5rem;
     padding: 0.6rem 0.9rem;
-    border-radius: 6px;
-    color: var(--color-text-muted);
+    border-radius: 8px;
+    color: var(--text-muted);
     font-size: 0.95rem;
+    font-weight: 500;
     transition: background 0.15s ease, color 0.15s ease;
 }
 
 .admin-nav-link:hover {
-    background: var(--color-bg-panel-alt);
-    color: var(--color-text);
+    background: var(--red-soft);
+    color: var(--red);
 }
 
 .admin-nav-link.active {
-    background: var(--color-accent);
+    background: var(--red);
     color: #FFFFFF;
+    box-shadow: 0 4px 12px rgba(214, 40, 40, 0.25);
 }
 
-/* Main content area is pushed right by the sidebar's width on desktop,
-   using margin instead of flexbox — this is what stops content from
-   ever sliding underneath the fixed sidebar. */
 .admin-main {
     margin-left: 250px;
     min-height: 100vh;
@@ -91,8 +91,8 @@ html, body {
 }
 
 .admin-topbar {
-    background: var(--color-bg-panel);
-    border-bottom: 1px solid var(--color-border);
+    background: var(--bg-panel);
+    border-bottom: 1px solid var(--border);
     padding: 1rem 1.5rem;
     display: flex;
     justify-content: space-between;
@@ -109,30 +109,91 @@ html, body {
 
 /* ---------------- Dashboard stat cards ---------------- */
 .stat-card {
-    background: var(--color-bg-panel);
-    border: 1px solid var(--color-border);
-    border-radius: 10px;
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
     padding: 1.5rem;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.stat-card:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--red);
 }
 
 .stat-card .stat-label {
-    color: var(--color-text-muted);
+    color: var(--text-muted);
     font-size: 0.85rem;
 }
 
 .stat-card .stat-value {
     font-family: var(--font-display);
     font-size: 1.8rem;
-    font-weight: 600;
+    font-weight: 700;
     margin-top: 0.25rem;
+    color: var(--text);
 }
 
 .stat-card .icon {
-    color: var(--color-accent);
+    color: var(--red);
     font-size: 1.4rem;
 }
 
-/* ---------------- Responsive: sidebar becomes off-canvas below 992px ---------------- */
+/* ---------------- Table action buttons ---------------- */
+.table-actions {
+    display: flex;
+    gap: 0.4rem;
+    justify-content: flex-end;
+    flex-wrap: nowrap;
+}
+
+.table-actions form {
+    margin: 0;
+}
+
+.table-actions .btn {
+    padding: 0.3rem 0.65rem;
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
+
+@media (max-width: 576px) {
+    .table-actions {
+        flex-direction: column;
+        align-items: stretch;
+        min-width: 90px;
+    }
+}
+
+.table-responsive {
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Table headers/rows tuned to the red accent */
+.table thead th {
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    border-bottom: 1px solid var(--border);
+}
+
+.table tbody tr:hover {
+    background: var(--red-soft);
+}
+
+.ticket-status {
+    display: inline-block;
+    background: var(--red-soft);
+    color: var(--red);
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+/* ---------------- Responsive sidebar (off-canvas on tablet/mobile) ---------------- */
 .admin-backdrop {
     display: none;
 }
@@ -162,7 +223,6 @@ html, body {
         pointer-events: auto;
     }
 
-    /* No sidebar visible by default on mobile/tablet, so content takes full width */
     .admin-main {
         margin-left: 0;
     }
@@ -183,38 +243,5 @@ html, body {
     }
     .table {
         font-size: 0.85rem;
-    }
-}
-
-/* Tables inside cards scroll horizontally on narrow screens instead of breaking layout */
-.table-responsive {
-    -webkit-overflow-scrolling: touch;
-}
-
-/* ---------------- Table action buttons ---------------- */
-.table-actions {
-    display: flex;
-    gap: 0.4rem;
-    justify-content: flex-end;
-    flex-wrap: nowrap;
-}
-
-.table-actions form {
-    margin: 0;
-}
-
-.table-actions .btn {
-    padding: 0.3rem 0.65rem;
-    font-size: 0.8rem;
-    white-space: nowrap;
-}
-
-/* On narrow screens, stack the buttons vertically instead of squeezing
-   them side by side, and let each one take the row's full width. */
-@media (max-width: 576px) {
-    .table-actions {
-        flex-direction: column;
-        align-items: stretch;
-        min-width: 90px;
     }
 }
